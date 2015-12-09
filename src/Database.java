@@ -89,6 +89,10 @@ public class Database {
 		
 	}
 	
+	public void clear() {
+	    riDB.clear();
+	}
+	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("TERMS:\n" + riDB.toString("TERMS") + "\n");

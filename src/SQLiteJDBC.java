@@ -1,12 +1,15 @@
+import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 
 public class SQLiteJDBC {
 
 	private Connection con;
+	private String name;
 
 	public SQLiteJDBC(String name) throws Exception {
 		Class.forName("org.sqlite.JDBC");
+		this.name = name;
 		con = DriverManager.getConnection("jdbc:sqlite:" + name + ".db");
 	}
 
@@ -50,6 +53,14 @@ public class SQLiteJDBC {
 		if (!rs.next())
 			throw new SQLException();
 		return rs.getInt(1);
+	}
+	
+	public void clear() {
+	    try {
+	        new File(name + ".db").delete();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }	
 	}
 
 	public String toString(String table) {

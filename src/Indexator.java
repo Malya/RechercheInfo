@@ -22,26 +22,25 @@ public class Indexator {
 		db = new Database();
 	}
 	
-	public void indexAllFiles(File folder) {
-		final int max = 1;
-		int count = 0;
-	    for (File fileEntry : folder.listFiles()) {
-			if (count >= max) {
-				break;
-			}
-			count++;
+	public void indexNFiles(File folder, int n) {
+		File files[] = folder.listFiles();
+		if (n == -1) {
+			n = files.length;
+		}
+		for (int i = 0; i < n; i += 1) {
 	    	index.clear();
-	    	
-	        indexOneFile(fileEntry);
+	   	 
+	        indexOneFile(files[i]);
 	        
-	        String fileName = fileEntry.getName();
-	        System.out.println(fileName);
+	        String fileName = files[i].getName();
 			for(String value : index.keySet()) {
 				db.links(value, fileName, index.get(value));
-			}        
-	    }
-	    System.out.println("fini");
-	    //System.out.println(db);
+			} 
+		}
+	}
+	
+	public void indexAllFiles(File folder) {
+	    indexNFiles(folder, -1);
 	}
 	
 	/*
@@ -137,12 +136,21 @@ public class Indexator {
 		}
 		return result;
 	}
+	
+	public void clear() {
+		db.clear();
+	}
+	
+	public String toString() {
+		return db.toString();
+	}
 
 	public static void main(String[] args) {
 		File input = new File("CORPUS");
 		Indexator indexator = new Indexator();
-		indexator.indexAllFiles(input);
-				
+		indexator.indexNFiles(input, 3);
+	    System.out.println(indexator);
+	    indexator.clear();
 	}
 	
 
