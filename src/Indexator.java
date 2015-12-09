@@ -14,20 +14,34 @@ import org.jsoup.select.Elements;
 
 public class Indexator {
 	
-	private HashMap<String, Integer> index = new HashMap<>();
+	private HashMap<String, Integer> index;
+	private Database db;
+	
+	public Indexator() {
+		index = new HashMap<>();
+		db = new Database();
+	}
 	
 	public void indexAllFiles(File folder) {
+		final int max = 1;
+		int count = 0;
 	    for (File fileEntry : folder.listFiles()) {
+			if (count >= max) {
+				break;
+			}
+			count++;
 	    	index.clear();
 	    	
 	        indexOneFile(fileEntry);
 	        
 	        String fileName = fileEntry.getName();
+	        System.out.println(fileName);
 			for(String value : index.keySet()) {
-				// db.links(value, fileName, index.get(value));
-			}
-	        
+				db.links(value, fileName, index.get(value));
+			}        
 	    }
+	    System.out.println("fini");
+	    //System.out.println(db);
 	}
 	
 	/*
@@ -61,9 +75,6 @@ public class Indexator {
 			// Remove the stop words
 			removeStopWords();
 			
-			for(String value : index.keySet()) {
-				System.out.println(value);
-			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();
