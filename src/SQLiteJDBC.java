@@ -53,6 +53,7 @@ public class SQLiteJDBC {
 		if (!rs.next())
 			throw new SQLException();
 		return rs.getInt(1);
+		
 	}
 	
 	public void clear() {

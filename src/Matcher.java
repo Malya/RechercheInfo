@@ -9,7 +9,7 @@ public class Matcher {
 	public Matcher(String query) {
 		queryWords = new ArrayList<>();
 		Indexator index = new Indexator();
-		//db = index.getDatabase();
+		db = index.getDatabase();
 		
 		for(String word : query.split("[\\s\\p{Punct}]+")) {
 			word = index.cleanWord(word);
@@ -18,8 +18,12 @@ public class Matcher {
 			}
 		}
 		
+		int termId;
 		for(String word : queryWords) {
-			
+			termId = db.getTermId(word);
+			if(termId != -1) {
+				
+			}
 		}
 	}
 	

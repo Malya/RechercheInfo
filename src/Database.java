@@ -100,5 +100,31 @@ public class Database {
 		sb.append("LINKS:\n" + riDB.toString("LINKS") + "\n");
 		return sb.toString();
 	}
+	
+	public int getTermId(String term) {
+		int result = -1;
+		try {
+			result = riDB.getSingleInt("TERMS", "Id", "Term='" + term + "'");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	public Entry<Integer, Integer> getDocTf(int termId) {
+		Entry<Integer, Integer> result = null;
+		Integer docId, tf;
+		
+		try {
+			docId = riDB.getSingleInt("LINKS", "DocID", "TermID='" + termId + "'");
+			tf = riDB.getSingleInt("LINKS", "TF", "TermID='" + termId + "'");
+			result = new AbstractMap.SimpleEntry<Integer, Integer>(docId, tf);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
 
 }

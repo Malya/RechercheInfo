@@ -22,6 +22,10 @@ public class Indexator {
 		db = new Database();
 	}
 	
+	public Database getDatabase() {
+		return db;
+	}
+	
 	public void indexNFiles(File folder, int n) {
 		File files[] = folder.listFiles();
 		if (n == -1) {
