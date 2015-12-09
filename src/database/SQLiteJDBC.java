@@ -1,8 +1,9 @@
+package database;
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class SQLiteJDBC {
+public class SQLiteJDBC implements JDBC {
 
 	private Connection con;
 	private String name;
@@ -11,6 +12,7 @@ public class SQLiteJDBC {
 		Class.forName("org.sqlite.JDBC");
 		this.name = name;
 		con = DriverManager.getConnection("jdbc:sqlite:" + name + ".db");
+		con.setAutoCommit(false);
 	}
 
 	public void createTable(String sql) throws SQLException {
@@ -20,6 +22,18 @@ public class SQLiteJDBC {
 		stmt.close();
 	}
 
+	public void execute(String query) throws SQLException {
+		Statement stmt;
+		stmt = con.createStatement();
+		stmt.executeUpdate(query);
+	}
+	
+	public ResultSet select(String query) throws SQLException {
+		Statement stmt;
+		stmt = con.createStatement();
+		return stmt.executeQuery(query);
+	}
+	
 	public void insert(String table, String fields, String values) throws SQLException {
 		Statement stmt;
 		String sql;
@@ -53,6 +67,14 @@ public class SQLiteJDBC {
 		if (!rs.next())
 			throw new SQLException();
 		return rs.getInt(1);
+	}
+	
+	public void commit() {
+		try {
+			con.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void clear() {

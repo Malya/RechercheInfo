@@ -11,6 +11,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
+import database.Database;
+
 
 public class Indexator {
 	
@@ -35,7 +37,10 @@ public class Indexator {
 	        String fileName = files[i].getName();
 			for(String value : index.keySet()) {
 				db.links(value, fileName, index.get(value));
-			} 
+			}
+			
+			long time = System.currentTimeMillis() - start;
+			System.out.println(files[i].getName() + " : " + time/1000 + "s");
 		}
 	}
 	
@@ -137,6 +142,10 @@ public class Indexator {
 		return result;
 	}
 	
+	public void flush() {
+		this.db.flush();
+	}
+	
 	public void clear() {
 		db.clear();
 	}
@@ -145,12 +154,18 @@ public class Indexator {
 		return db.toString();
 	}
 
+	static long start = 0;
+	
 	public static void main(String[] args) {
+		start = System.currentTimeMillis();
 		File input = new File("CORPUS");
 		Indexator indexator = new Indexator();
-		indexator.indexNFiles(input, 3);
-	    System.out.println(indexator);
-	    indexator.clear();
+		//indexator.indexNFiles(input, 5);
+		indexator.indexAllFiles(input);
+		indexator.flush();
+		long time = System.currentTimeMillis() - start;
+		System.out.println("Time : " + time/1000 + "s");
+		System.out.println(indexator.db);
 	}
 	
 
