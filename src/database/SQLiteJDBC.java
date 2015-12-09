@@ -67,6 +67,7 @@ public class SQLiteJDBC implements JDBC {
 		if (!rs.next())
 			throw new SQLException();
 		return rs.getInt(1);
+		
 	}
 	
 	public void commit() {

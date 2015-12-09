@@ -142,8 +142,8 @@ public class Indexator {
 		return result;
 	}
 	
-	public void flush() {
-		this.db.flush();
+	public Database getDatabase() {
+		return db;
 	}
 	
 	public void clear() {
@@ -162,7 +162,7 @@ public class Indexator {
 		Indexator indexator = new Indexator();
 		//indexator.indexNFiles(input, 5);
 		indexator.indexAllFiles(input);
-		indexator.flush();
+		indexator.getDatabase().flush();
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Time : " + time/1000 + "s");
 		System.out.println(indexator.db);
