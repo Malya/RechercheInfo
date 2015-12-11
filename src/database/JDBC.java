@@ -18,6 +18,8 @@ public interface JDBC {
 	
 	public int getSingleInt(String table, String field, String where) throws SQLException;
 	
+	public String getSingleString(String table, String field, String where) throws SQLException;
+	
 	public void commit();
 	
 	public void clear();

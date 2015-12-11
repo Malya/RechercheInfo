@@ -39,8 +39,8 @@ public class Indexator {
 				db.links(value, fileName, index.get(value));
 			}
 			
-			long time = System.currentTimeMillis() - start;
-			System.out.println(files[i].getName() + " : " + time/1000 + "s");
+			//long time = System.currentTimeMillis() - start;
+			//System.out.println(files[i].getName() + " : " + time/1000 + "s");
 		}
 	}
 	
@@ -93,7 +93,7 @@ public class Indexator {
 	 *  
 	 * Input : String word = The word to clean
 	 */
-	public String cleanWord(String word) {
+	public static String cleanWord(String word) {
 		word = word.replaceAll("\\p{Digit}", "");
 		word = word.toLowerCase();
 		word = Normalizer.normalize(word, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "");
@@ -160,12 +160,29 @@ public class Indexator {
 		start = System.currentTimeMillis();
 		File input = new File("CORPUS");
 		Indexator indexator = new Indexator();
-		//indexator.indexNFiles(input, 5);
-		indexator.indexAllFiles(input);
-		indexator.getDatabase().flush();
+		//indexator.indexNFiles(input, 1);
+		//indexator.indexAllFiles(input);
+		//indexator.getDatabase().flush();
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Time : " + time/1000 + "s");
-		System.out.println(indexator.db);
+		//System.out.println(indexator.db);
+		
+		Matcher matcher = new Matcher(indexator);
+		//matcher.match("casting intouchables");
+		
+		Evaluator evaluator = new Evaluator(matcher);
+		evaluator.evaluate("personnes Intouchables", "QRELS/qrelQ1.txt", 5);
+		evaluator.evaluate("personnes Intouchables", "QRELS/qrelQ1.txt", 10);
+		evaluator.evaluate("personnes Intouchables", "QRELS/qrelQ1.txt", 25);
+		
+		evaluator.evaluate("lieu naissance omar sy", "QRELS/qrelQ2.txt", 5);
+		evaluator.evaluate("lieu naissance omar sy", "QRELS/qrelQ2.txt", 10);
+		evaluator.evaluate("lieu naissance omar sy", "QRELS/qrelQ2.txt", 25);
+		
+		evaluator.evaluate("acteurs joué avec omar sy", "QRELS/qrelQ9.txt", 5);
+		evaluator.evaluate("acteurs joué avec omar sy", "QRELS/qrelQ9.txt", 10);
+		evaluator.evaluate("acteurs joué avec omar sy", "QRELS/qrelQ9.txt", 25);
+		
 	}
 	
 

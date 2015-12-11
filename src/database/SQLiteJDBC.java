@@ -67,7 +67,16 @@ public class SQLiteJDBC implements JDBC {
 		if (!rs.next())
 			throw new SQLException();
 		return rs.getInt(1);
+	}
+	
+	public String getSingleString(String table, String field, String where) throws SQLException {
+		Statement stmt;
+		stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery("SELECT " + field + " FROM " + table + " WHERE " + where + ";");
+		if (!rs.next())
+			throw new SQLException();
 		
+		return rs.getString(1);
 	}
 	
 	public void commit() {

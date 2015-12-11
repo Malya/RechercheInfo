@@ -1,8 +1,8 @@
 package database;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.AbstractMap;
-import java.util.Map.Entry;
 
 import database.item.Documents;
 import database.item.Links;
@@ -60,20 +60,27 @@ public class Database {
 			result = riDB.getSingleInt("TERMS", "Id", "Term='" + term + "'");
 		} catch (SQLException e) {
 			e.printStackTrace();
+			System.out.println("Term: " + term);
+		}
+
+		return result;
+	}
+	
+	public String getDocPath(int docID) {
+		String result = "";
+		try {
+			result = riDB.getSingleString("DOCUMENTS", "Path", "Id='" + docID + "'");
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 
 		return result;
 	}
 
-	public Entry<Integer, Integer> getDocTf(int termId) {
-		Entry<Integer, Integer> result = null;
-		Integer docId, tf;
-
+	public ResultSet getDocTf(int termId) {
+		ResultSet result = null;
 		try {
-			docId = riDB.getSingleInt("LINKS", "DocID", "TermID='" + termId
-					+ "'");
-			tf = riDB.getSingleInt("LINKS", "TF", "TermID='" + termId + "'");
-			result = new AbstractMap.SimpleEntry<Integer, Integer>(docId, tf);
+			result = riDB.select("SELECT DocID, TF FROM LINKS WHERE TermID='" + termId + "';");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
