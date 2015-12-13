@@ -1,4 +1,7 @@
-package database.item;
+package database.writer.item;
+
+import database.writer.item.Document;
+import database.writer.item.Term;
 
 
 
@@ -15,7 +18,7 @@ public class Link {
 		this.term.links(this.tf);
 	}
 	
-	public String insert() {
+	protected String insert() {
 		return "INSERT INTO LINKS (TermId, DocID, TF) " + "VALUES ('" + this.term.getId() + "', '" + this.doc.getId() + "', '" + this.tf + "');";
 	}
 	
