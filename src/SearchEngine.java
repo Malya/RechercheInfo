@@ -6,7 +6,7 @@ import java.util.Arrays;
 import query.Matcher;
 
 
-public class Tester {
+public class SearchEngine {
 
 	/**
 	 * @param args
@@ -20,6 +20,7 @@ public class Tester {
 			} else if (opt.equals("-i")) {
 				if (log) {
 					time = -System.currentTimeMillis();
+					System.out.println("Start process");
 				}
 				File input = new File("CORPUS");
 				Indexator indexator = new Indexator();

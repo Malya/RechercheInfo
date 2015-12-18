@@ -8,7 +8,8 @@ public class Token {
 	private String suffix;
 	
 	protected Token(String word) {
-		char seq[] = word.toCharArray();
+		this.normal = word;
+		char seq[] = this.normal.toCharArray();
 		StringBuilder sb = new StringBuilder(7);
 		int i = 0, j = 0;
 		while ((i < seq.length) && (j < 7)) {
@@ -27,7 +28,6 @@ public class Token {
 			i += 1;
 		}
 		this.suffix = sb.toString();
-		this.normal = this.root + this.suffix;
 	}
 	
 	protected void setRoot(String root) {

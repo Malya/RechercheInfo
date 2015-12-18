@@ -23,7 +23,7 @@ import format.Tokens;
 
 public class Indexator {
 
-	private static final boolean log = true;
+	private static final boolean log = false;
 	private Database db;
 	private Tokens tokenizer;
 	private List<String> blacklist;
