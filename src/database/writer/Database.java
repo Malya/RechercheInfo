@@ -12,6 +12,7 @@ import database.writer.item.Documents;
 import database.writer.item.Links;
 import database.writer.item.Terms;
 import format.Tokens;
+import format.impl.TokensImpl;
 
 public class Database {
 
@@ -36,7 +37,7 @@ public class Database {
 	}
 
 	public Tokens getTokenizer() {
-		return new Tokens(); //TODO
+		return new TokensImpl(); //TODO
 	}
 	
 	public void links(String term, String doc, int tf) {

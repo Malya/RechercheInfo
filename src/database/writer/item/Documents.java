@@ -7,11 +7,12 @@ import database.support.DBHelper;
 
 public class Documents extends Items<Document> {
 
-	private static final String TABLE  = "CREATE TABLE DOCUMENTS          " + 
-										 "(Id   INTEGER PRIMARY KEY, 	   " + 
-										 " Path CHAR(50) NOT NULL UNIQUE) " ;
+	private static final String TABLE  = "CREATE TABLE DOCUMENTS                  " + 
+										 "(Id     INTEGER PRIMARY KEY, 	          " + 
+										 " Path   CHAR(50) NOT NULL UNIQUE,       " +
+										 " Weight INT NOT NULL)                   " ;
 	
-	private static final String SELECT = "SELECT Id, Path FROM DOCUMENTS;      " ;
+	private static final String SELECT = "SELECT Id, Path FROM DOCUMENTS; " ;
 	
 	public Documents(DBHelper db) throws DBException {
 		super(db);
@@ -33,7 +34,7 @@ public class Documents extends Items<Document> {
 	}
 
 	@Override
-	protected void refresh(Document doc, ResultSet rs) throws DBException {		
+	protected void refresh(Document doc, ResultSet rs) throws DBException {
 	}
 	
 	

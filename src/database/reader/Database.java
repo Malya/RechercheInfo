@@ -21,7 +21,7 @@ public class Database {
 	
 	private DBHelper database;
 	private Items<Term> terms;
-	private Items<Document> docs;
+	private Documents docs;
 
 	public Database() {
 		try {
@@ -57,6 +57,7 @@ public class Database {
 				}
 			}
 		}.execute();
+		docs.update(this.database);
 		return load;
 	}
 	

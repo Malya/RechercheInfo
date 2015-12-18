@@ -15,6 +15,7 @@ import database.reader.Document;
 import database.reader.Link;
 import database.reader.Term;
 import format.Tokens;
+import format.impl.TokensImpl;
 
 
 public class Matcher {
@@ -23,7 +24,7 @@ public class Matcher {
 	private Database database;
 	
 	public Matcher() {
-		this.tokenizer = new Tokens();
+		this.tokenizer = new TokensImpl();
 		this.database = new Database();
 	}
 	

@@ -13,10 +13,13 @@ public class SearchEngine {
 	 */
 	public static void main(String[] args) {
 		boolean log = false;
+		boolean print = false;
 		long time = 0;
 		for (String opt : args) {
 			if (opt.equals("-l")) {
 				log = true;
+			} else if (opt.equals("-p")) { 
+				print = true;
 			} else if (opt.equals("-i")) {
 				if (log) {
 					time = -System.currentTimeMillis();
@@ -28,6 +31,9 @@ public class SearchEngine {
 				if (log) {
 					time += System.currentTimeMillis();
 					System.out.println("Time : " + time + "ms");
+				}
+				if (print) {
+					indexator.export();
 				}
 			} else if (opt.equals("-e")) {
 				Evaluator evaluator = new Evaluator(new Matcher());

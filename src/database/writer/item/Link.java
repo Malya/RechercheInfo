@@ -16,6 +16,7 @@ public class Link {
 		this.doc = doc;
 		this.tf = tf;
 		this.term.links(this.tf);
+		this.doc.link(tf);
 	}
 	
 	protected String insert() {

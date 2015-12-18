@@ -21,6 +21,7 @@ import database.writer.Database;
 import format.Token;
 import format.Tokens;
 
+
 public class Indexator {
 
 	private static final boolean log = false;
@@ -132,6 +133,10 @@ public class Indexator {
 		return sb.toString();
 	}
 
+	public void export() {
+		this.db.export();
+	}
+	
 	public static void main(String[] args) {
 		long time = 0;
 		if (log) {
@@ -143,7 +148,7 @@ public class Indexator {
 		if (log) {
 			time += System.currentTimeMillis();
 			System.out.println("Time : " + time / 1000 + "s");
-			indexator.db.export();
+			indexator.export();
 		} 
 	}
 
