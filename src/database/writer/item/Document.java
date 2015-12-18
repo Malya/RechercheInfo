@@ -29,7 +29,7 @@ public class Document extends Item {
 	}
 	
 	protected void link(int weight) {
-		this.weight += weight;
+		this.weight += weight * weight;
 	}
 
 	protected String insert() {
