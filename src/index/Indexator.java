@@ -19,14 +19,14 @@ import org.jsoup.select.Elements;
 
 import database.writer.Database;
 import format.Token;
-import format.Tokens;
+import format.Tokenizer;
 
 
 public class Indexator {
 
 	private static final boolean log = false;
 	private Database db;
-	private Tokens tokenizer;
+	private Tokenizer tokenizer;
 	private List<String> blacklist;
 
 	public Indexator() {

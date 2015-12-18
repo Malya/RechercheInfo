@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import database.exception.DBException;
-import database.reader.item.Items;
 import database.support.DBHelper;
 import database.support.Query;
 import database.support.sqlite.SQLite;
@@ -20,7 +19,7 @@ public class Database {
 	private static final String SELECT = "SELECT T.Term, D.Path, L.TF FROM LINKS AS L JOIN TERMS AS T JOIN DOCUMENTS AS D ON L.TermID = T.Id AND L.DocID = D.Id WHERE " ;
 	
 	private DBHelper database;
-	private Items<Term> terms;
+	private Terms terms;
 	private Documents docs;
 
 	public Database() {
@@ -30,8 +29,8 @@ public class Database {
 			e.printStackTrace();
 			System.exit(0);
 		}
-		terms = Term.collection();
-		docs = Document.collection();
+		terms = new Terms(this.database);
+		docs = new Documents(this.database);
 	}
 
 	public List<Term> load(List<Token> tokens) throws DBException {
@@ -57,7 +56,8 @@ public class Database {
 				}
 			}
 		}.execute();
-		docs.update(this.database);
+		terms.load();
+		docs.load();
 		return load;
 	}
 	

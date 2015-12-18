@@ -8,15 +8,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import format.Token;
-import format.Tokens;
+import format.Tokenizer;
 
 
-public class TokensImpl implements Tokens {
+
+public class Tokens implements Tokenizer {
 
 	private Map<String, Token> tokens;
 	private Map<String, List<Token>> roots;
 	
-	public TokensImpl() {
+	public Tokens() {
 		this.tokens = new HashMap<String, Token>();
 		this.roots = new HashMap<String, List<Token>>();
 	}
@@ -29,11 +30,15 @@ public class TokensImpl implements Tokens {
 		return tokens;
 	}
 	
+	protected Token token(String word) {
+		return new Truncaction(word);
+	}
+	
 	public Token get(String word) {
 		word = Normalizer.normalize(word, Normalizer.Form.NFD);
 		Token token = this.tokens.get(word);
 		if (token == null) {
-			token = new TokenImpl(word);
+			token = token(word);
 			this.tokens.put(word, token);
 			String root = token.getRoot();
 			List<Token> related = this.roots.get(root);
@@ -42,7 +47,7 @@ public class TokensImpl implements Tokens {
 				this.roots.put(root, related);
 			} else {
 				root = related.get(0).getRoot();
-				((TokenImpl) token).setRoot(root);
+				((Truncaction) token).setRoot(root);
 			}
 			related.add(token);
 		}
@@ -59,7 +64,7 @@ public class TokensImpl implements Tokens {
 	
 	public static void main(String args[]) {
 		final String words[] = {"Désespérant", "desesperance", "desespoir", "desesperer", "désespérément", "désespérant", "désesperant", "désespéré", "désespérée"};
-		TokensImpl tokens = new TokensImpl();
+		Tokens tokens = new Tokens();
 		for (String word : words) {
 			Token token = tokens.get(word);
 			System.out.println("[" + word + "::" + token + "::" + token.getRoot() + "::" + token.getSuffix() + "]");

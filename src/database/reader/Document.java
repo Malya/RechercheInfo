@@ -5,10 +5,6 @@ public class Document {
 	
 	private Integer weight;
 	
-	public static Documents collection() {
-		return new Documents();
-	}
-	
 	private String path;
 	
 	protected Document(String path) {

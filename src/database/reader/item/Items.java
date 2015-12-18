@@ -1,14 +1,22 @@
 package database.reader.item;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
+import database.exception.DBException;
+import database.support.DBHelper;
+import database.support.Query;
 
 public abstract class Items<I> {
 
 	private Map<String, I> map;
+	private DBHelper database;
 	
-	protected Items() {
+	protected Items(DBHelper database) {
 		this.map = new HashMap<String, I>();
+		this.database = database;
 	}
 	
 	public I get(String name) {
@@ -21,6 +29,24 @@ public abstract class Items<I> {
 	}
 	
 	protected abstract I item(String name);
+	
+	protected abstract String query();
+	
+	protected abstract void refresh(I item, ResultSet rs) throws SQLException;
+	
+	public void load() throws DBException {
+		StringBuilder query = new StringBuilder(this.query());
+		new Query(this.database, "load()", query.toString()) {
+			@Override
+			protected void process(ResultSet rs) throws DBException,
+					SQLException {
+				while (rs.next()) {
+					String name = rs.getString(1);
+					refresh(get(name), rs);
+				}
+			}
+		}.execute();
+	}
 	
 	public void clear() {
 		this.map.clear();

@@ -14,17 +14,17 @@ import database.reader.Database;
 import database.reader.Document;
 import database.reader.Link;
 import database.reader.Term;
-import format.Tokens;
-import format.impl.TokensImpl;
+import format.Tokenizer;
+import format.impl.Tokens;
 
 
 public class Matcher {
 	
-	private Tokens tokenizer;
+	private Tokenizer tokenizer;
 	private Database database;
 	
 	public Matcher() {
-		this.tokenizer = new TokensImpl();
+		this.tokenizer = new Tokens();;
 		this.database = new Database();
 	}
 	

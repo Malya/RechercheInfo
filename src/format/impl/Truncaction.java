@@ -3,13 +3,13 @@ package format.impl;
 import format.Token;
 
 
-public class TokenImpl implements Token {
+public class Truncaction implements Token {
 
 	private String normal;
 	private String root;
 	private String suffix;
 	
-	protected TokenImpl(String word) {
+	protected Truncaction(String word) {
 		this.normal = word;
 		char seq[] = this.normal.toCharArray();
 		StringBuilder sb = new StringBuilder(7);

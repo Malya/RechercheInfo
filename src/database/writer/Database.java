@@ -11,8 +11,8 @@ import database.support.sqlite.SQLite;
 import database.writer.item.Documents;
 import database.writer.item.Links;
 import database.writer.item.Terms;
-import format.Tokens;
-import format.impl.TokensImpl;
+import format.Tokenizer;
+import format.impl.Tokens;
 
 public class Database {
 
@@ -36,8 +36,8 @@ public class Database {
 		}
 	}
 
-	public Tokens getTokenizer() {
-		return new TokensImpl(); //TODO
+	public Tokenizer getTokenizer() {
+		return new Tokens();
 	}
 	
 	public void links(String term, String doc, int tf) {
