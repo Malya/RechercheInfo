@@ -48,20 +48,23 @@ public class Matcher {
 		for (Term term : terms) {
 			for (Link link : term.getBinds()) {
 				score = scores.get(link.getDoc());
-				if(version == 1) {
-					if (score == null) {
-						scores.put(link.getDoc(), (float)link.getTF());
-					} else {
-						scores.put(link.getDoc(), score + link.getTF());
-					}
-				} else if(version == 2) {
-					TF = (float)link.getTF();
+				TF = (float) link.getTF();
+				if(version == 3) {
+					//TF = TF / term.getIdf();
+				}
+				if(version == 2) { // VERSION 2 : distance cosinus
 					if (score == null) {
 						scores.put(link.getDoc(), TF * TF);
 					} else {
 						scores.put(link.getDoc(), score + TF * TF);
 					}
-				}
+				} else { // VERSION 1 : somme des TF ; ou 3 : pondération TF_IDF 
+					if (score == null) {
+						scores.put(link.getDoc(), TF);
+					} else {
+						scores.put(link.getDoc(), score + TF);
+					}
+				} 
 			}
 		}
 		
