@@ -22,19 +22,20 @@ public class Matcher {
 	
 	private Tokens tokenizer;
 	private Database database;
+	private int version = 1;
 	
 	public Matcher() {
 		this.tokenizer = new TokensImpl();
 		this.database = new Database();
 	}
 	
-	public List<Entry<Document, Integer>> match(String query) {
+	public List<Entry<Document, Float>> match(String query) {
 		return this.match(Arrays.asList(query.split("[\\s\\p{Punct}]+")));
 	}
 	
-	public List<Entry<Document, Integer>> match(List<String> query) {
+	public List<Entry<Document, Float>> match(List<String> query) {
 		
-		Map<Document, Integer> scores = new HashMap<Document, Integer>();
+		Map<Document, Float> scores = new HashMap<Document, Float>();
 		
 		Collection<Term> terms = null;
 		try {
@@ -43,32 +44,60 @@ public class Matcher {
 			e.printStackTrace();
 			System.exit(0);
 		}
-
+		Float score, TF;
 		for (Term term : terms) {
 			for (Link link : term.getBinds()) {
-				Integer score = scores.get(link.getDoc());
-				if (score == null) {
-					scores.put(link.getDoc(), link.getTF());
-				} else {
-					scores.put(link.getDoc(), score + link.getTF());
+				score = scores.get(link.getDoc());
+				if(version == 1) {
+					if (score == null) {
+						scores.put(link.getDoc(), (float)link.getTF());
+					} else {
+						scores.put(link.getDoc(), score + link.getTF());
+					}
+				} else if(version == 2) {
+					TF = (float)link.getTF();
+					if (score == null) {
+						scores.put(link.getDoc(), TF * TF);
+					} else {
+						scores.put(link.getDoc(), score + TF * TF);
+					}
 				}
+			}
+		}
+		
+		if(version == 2) {
+			for(Document doc : scores.keySet()) {
+				score = (float) Math.sqrt((double) scores.get(doc));
+				score = (float) (score / (Math.sqrt((double) doc.getWeight()) * Math.sqrt((double) terms.size())));
+				//System.out.println("Weight: " + doc.getWeight() + ", score: " + score);
+				scores.put(doc, score);
 			}
 		}
 		
 		return this.sort(scores);
 	}
 	
-	private List<Entry<Document, Integer>> sort(Map<Document, Integer> map) {
-		List<Entry<Document, Integer>> list = new LinkedList<Entry<Document, Integer>>(map.entrySet());
+	private List<Entry<Document, Float>> sort(Map<Document, Float> map) {
+		List<Entry<Document, Float>> list = new LinkedList<Entry<Document, Float>>(map.entrySet());
 
 		// Defined Custom Comparator here
-		Collections.sort(list, new Comparator<Entry<Document, Integer>>() {
-			public int compare(Entry<Document, Integer> e1, Entry<Document, Integer> e2) {
-				return e2.getValue() - e1.getValue();
+		Collections.sort(list, new Comparator<Entry<Document, Float>>() {
+			public int compare(Entry<Document, Float> e1, Entry<Document, Float> e2) {
+				float result = e2.getValue() - e1.getValue();
+				if(result < 0)
+					return -1;
+				else if(result == 0) 
+					return 0;
+				else 
+					return 1;
 			}
 		});
 		
 		return list;
+	}
+	
+	public void setVersion(int version) {
+		this.version = version;
 	}
 	
 }

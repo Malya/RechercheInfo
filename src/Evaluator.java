@@ -23,35 +23,37 @@ public class Evaluator {
 
 	public void evaluate(String query, String qrelDoc, int nbResults) {
 
-		System.out.println("Requ√™tes √† √©valuer: " + query);
-
-		List<Entry<Document, Integer>> results = new ArrayList<Entry<Document, Integer>>(
-				matcher.match(query));
-
-		getPertinentDocs(qrelDoc);
-
-		Iterator<Entry<Document, Integer>> it = results.iterator();
-		Entry<Document, Integer> entry;
-		int i = 0;
-		int nbPertinent = 0;
-		while (it.hasNext() && i < nbResults) {
-			i++;
-			entry = it.next();
-			String doc = entry.getKey().getPath();
-			if (pertinentDocs.contains(doc)) {
-				nbPertinent++;
-			} else if (VERBOSE) {
-				System.out.println("Document non pertinent: " + doc);
+		System.out.println("RequÍtes ‡ Èvaluer: " + query);
+		
+		for(int v = 1; v <= 2; v++) {
+			matcher.setVersion(v);
+			List<Entry<Document, Float>> results = new ArrayList<Entry<Document, Float>>(matcher.match(query));
+	
+			getPertinentDocs(qrelDoc);
+	
+			Iterator<Entry<Document, Float>> it = results.iterator();
+			Entry<Document,Float> entry;
+			int i = 0;
+			int nbPertinent = 0;
+			while (it.hasNext() && i < nbResults) {
+				i++;
+				entry = it.next();
+				String doc = entry.getKey().getPath();
+				if (pertinentDocs.contains(doc)) {
+					nbPertinent++;
+				} else if (VERBOSE) {
+					System.out.println("Document non pertinent: " + doc);
+				}
 			}
+	
+			float precision = (float) nbPertinent / i;
+			float rappel = (float) nbPertinent / pertinentDocs.size();
+			/*System.out
+					.println("Nombre de documents ÈvaluÈs: " + i
+							+ ", TotalitÈ de documents pertinents: "
+							+ pertinentDocs.size());*/
+			System.out.println("VERSION: " + v + " -> P@" + nbResults + ": " + precision + ", R@" + nbResults + ": " + rappel);
 		}
-
-		float precision = (float) nbPertinent / i;
-		float rappel = (float) nbPertinent / pertinentDocs.size();
-		System.out
-				.println("Nombre de documents √©valu√©s: " + i
-						+ ", Totalit√© de documents pertinents: "
-						+ pertinentDocs.size());
-		System.out.println("Pr√©cision: " + precision + ", Rappel: " + rappel);
 
 	}
 
