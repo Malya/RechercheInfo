@@ -95,12 +95,12 @@ public class Indexator {
 			e.printStackTrace();
 			System.exit(0);
 		}
-		// Get all the words of the document (removing the words with less than
-		// two characters)
-		String result = this.getTextNodes(doc.children());
+		
+		// Get all the words of the document (removing the words with less than two characters)
+		this.getTextNodes(doc.children());
 		Integer occurence;
-		for (String word : result.split("[\\s\\p{Punct}]+")) {
-			Token token = this.tokenizer.get(word);
+		String word;
+		for (Token token : this.tokenizer.getTokens().values()) {
 			word = token.getRoot();
 			if (word.length() > 1) {
 				occurence = index.get(word);
@@ -111,25 +111,31 @@ public class Indexator {
 				}
 			}
 		}
+		
 		// Remove the stop words
 		this.clean(index);
 		return index;
 	}
 
-	private StringBuilder getTextNodes(Elements elems, StringBuilder sb) {
-		for (Element elem : elems) {
-			for (TextNode node : elem.textNodes()) {
-				sb.append(" ").append(node.text());
-			}
-			this.getTextNodes(elem.children(), sb);
-		}
-		return sb;
-	}
-	
-	private String getTextNodes(Elements elems) {
+	/*private String getTextNodes(Elements elems) {
 		StringBuilder sb = new StringBuilder();
 		this.getTextNodes(elems, sb);
 		return sb.toString();
+	}*/
+	
+	private void getTextNodes(Elements elems) {		
+		for (Element elem : elems) {
+			
+			StringBuilder sb = new StringBuilder();
+			for (TextNode node : elem.textNodes()) {
+				sb.append(" ").append(node.text());
+			}
+			for (String word : sb.toString().split("[\\s\\p{Punct}]+")) {
+				Token token = this.tokenizer.get(word);
+				token.setTag(elem.tagName());
+			}			
+			this.getTextNodes(elem.children());
+		}
 	}
 
 	public static void main(String[] args) {

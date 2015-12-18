@@ -18,6 +18,10 @@ public class Tokens {
 		this.roots = new HashMap<String, List<Token>>();
 	}
 	
+	public Map<String, Token> getTokens() {
+		return tokens;
+	}
+	
 	public List<Token> tokenize(List<String> words) {
 		List<Token> tokens = new ArrayList<Token>(words.size());
 		for (String word : words) {

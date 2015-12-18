@@ -6,6 +6,7 @@ public class Token {
 	private String normal;
 	private String root;
 	private String suffix;
+	private String tag;
 	
 	protected Token(String word) {
 		this.normal = word;
@@ -44,6 +45,14 @@ public class Token {
 	
 	public String toString() {
 		return this.normal;
+	}
+	
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+	
+	public String getTag() {
+		return this.tag;
 	}
 	
 }
