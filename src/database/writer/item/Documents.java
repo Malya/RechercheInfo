@@ -5,6 +5,9 @@ import java.sql.ResultSet;
 import database.exception.DBException;
 import database.support.DBHelper;
 
+import database.item.Item;
+import database.item.Items;
+
 public class Documents extends Items<Document> {
 
 	private static final String TABLE  = "CREATE TABLE DOCUMENTS                  " + 
@@ -24,7 +27,7 @@ public class Documents extends Items<Document> {
 	}
 
 	@Override
-	protected Document item(String name) {
+	protected Document unique(String name) {
 		return new Document(name);
 	}
 
@@ -35,6 +38,16 @@ public class Documents extends Items<Document> {
 
 	@Override
 	protected void refresh(Document doc, ResultSet rs) throws DBException {
+	}
+
+	@Override
+	protected String insert(Item<Document> doc) {
+		return "INSERT INTO DOCUMENTS (Id, Path, Weight) " + "VALUES ('" + doc.getId() + "', '" + doc.getUnique().getPath() + "', '" + doc.getUnique().getWeight() + "');";
+	}
+
+	@Override
+	protected String update(Item<Document> doc) {
+		return "UPDATE DOCUMENTS set Weight='" + doc.getUnique().getWeight() + "' where Id='" + doc.getId() + "';";
 	}
 	
 	

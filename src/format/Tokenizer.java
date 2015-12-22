@@ -4,12 +4,8 @@ import java.util.List;
 
 public interface Tokenizer {
 
-	public List<Token> tokenize(List<String> words);
+	public List<Token> tokenize(String sentence);
 	
-	public Token get(String word);
-	
-	public List<Token> related(Token token);
-	
-	public List<Token> related(String word);
+	public List<Token> tokenize(List<String> words);	
 	
 }

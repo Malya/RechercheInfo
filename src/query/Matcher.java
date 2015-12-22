@@ -15,7 +15,7 @@ import database.reader.Document;
 import database.reader.Link;
 import database.reader.Term;
 import format.Tokenizer;
-import format.impl.Tokens;
+import format.stemmer.Stemmer;
 
 
 public class Matcher {
@@ -25,7 +25,7 @@ public class Matcher {
 	private int version = 1;
 	
 	public Matcher() {
-		this.tokenizer = new Tokens();;
+		this.tokenizer = new Stemmer();;
 		this.database = new Database();
 	}
 	
@@ -50,7 +50,7 @@ public class Matcher {
 				score = scores.get(link.getDoc());
 				TF = (float) link.getTF();
 				if(version == 3) {
-					//TF = TF / term.getIdf();
+					TF = TF / term.getIDF();
 				}
 				if(version == 2) { // VERSION 2 : distance cosinus
 					if (score == null) {
@@ -58,7 +58,7 @@ public class Matcher {
 					} else {
 						scores.put(link.getDoc(), score + TF * TF);
 					}
-				} else { // VERSION 1 : somme des TF ; ou 3 : pondération TF_IDF 
+				} else { // VERSION 1 : somme des TF ; ou 3 : pondï¿½ration TF_IDF 
 					if (score == null) {
 						scores.put(link.getDoc(), TF);
 					} else {

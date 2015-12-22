@@ -1,9 +1,11 @@
 package database.writer.item;
 
+import database.item.Unique;
 
 
 
-public class Term extends Item {
+
+public class Term implements Unique {
 	
 	private String word;
 	private Integer idf;
@@ -13,8 +15,7 @@ public class Term extends Item {
 		this.idf = 0;
 	}
 	
-	protected Term(int id, String word, int idf) {
-		this.setId(id);
+	protected Term(String word, int idf) {
 		this.word = word;
 		this.idf = idf;
 	}
@@ -35,11 +36,10 @@ public class Term extends Item {
 		this.idf -= tf;
 	}
 
-	protected String insert() {
-		return "INSERT INTO TERMS (Id, Term, IDF) " + "VALUES ('" + this.getId() + "', '" + this.word + "', '" + this.idf + "');";
+	@Override
+	public String getName() {
+		return this.word;
 	}
-	
-	protected String update() {
-		return "UPDATE TERMS set IDF='" + this.idf + "' where Id='" + this.getId() + "';";
-	}
+
+
 }

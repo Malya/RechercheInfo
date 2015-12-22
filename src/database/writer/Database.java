@@ -10,16 +10,20 @@ import database.support.DBHelper;
 import database.support.sqlite.SQLite;
 import database.writer.item.Documents;
 import database.writer.item.Links;
+import database.writer.item.Roots;
 import database.writer.item.Terms;
+import format.Token;
 import format.Tokenizer;
-import format.impl.Tokens;
+import format.stemmer.Stemmer;
 
 public class Database {
 
 	public static final String NAME = "seDB";
-	public static final String TABLES[] = {"TERMS", "DOCUMENTS", "LINKS"};
+	public static final String TABLES[] = {"TERMS", "ROOTS", "DOCUMENTS", "LINKS"};
  	
 	private DBHelper db;
+	private Tokenizer tk;
+	private Roots roots;
 	private Terms terms;
 	private Documents docs;
 	private Links links;
@@ -27,7 +31,9 @@ public class Database {
 	public Database() {
 		try {
 			this.db = new SQLite(NAME);
-			this.terms = new Terms(db);
+			this.tk = new Stemmer();
+			this.roots = new Roots(db);
+			this.terms = new Terms(db, this.roots);
 			this.docs = new Documents(db);
 			this.links = new Links(db, this.terms, this.docs);
 		} catch (Exception e) {
@@ -37,11 +43,12 @@ public class Database {
 	}
 
 	public Tokenizer getTokenizer() {
-		return new Tokens();
+		return tk;
 	}
 	
-	public void links(String term, String doc, int tf) {
-		this.links.links(this.terms.get(term), this.docs.get(doc), tf);
+	public void links(Token value, String doc, int tf) {
+		this.links.links(value.toString(), doc, tf);
+		this.terms.attach(value.toString(), value.getRoot());
 	}
 
 	public void flush() {

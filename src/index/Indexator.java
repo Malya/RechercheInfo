@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -27,12 +26,12 @@ public class Indexator {
 	private static final boolean log = false;
 	private Database db;
 	private Tokenizer tokenizer;
-	private List<String> blacklist;
+	private List<Token> blacklist;
 
 	public Indexator() {
 		this.db = new Database();
 		this.tokenizer = this.db.getTokenizer();
-		this.blacklist = new ArrayList<String>();
+		List<String> blacklist = new ArrayList<String>();
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new FileReader("src/index/stopliste.txt"));
@@ -43,8 +42,9 @@ public class Indexator {
 		try {
 			String word;
 			while ((word = reader.readLine()) != null) {
-				this.blacklist.add(word);
+				blacklist.add(word);
 			}
+			this.blacklist = this.tokenizer.tokenize(blacklist);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -63,9 +63,9 @@ public class Indexator {
 			if (log) {
 				time = - System.currentTimeMillis();
 			}
-			Map<String, Integer> index = index(file);
+			Map<Token, Integer> index = index(file);
 			String name = file.getName();
-			for (String value : index.keySet()) {
+			for (Token value : index.keySet()) {
 				db.links(value, name, index.get(value));
 			}
 			if (log) {
@@ -76,19 +76,19 @@ public class Indexator {
 		this.db.flush();
 	}
 	
-	private Map<String, Integer> clean(Map<String, Integer> words) {
-		for (String word : this.blacklist) {
-			words.remove(word);
+	private Map<Token, Integer> clean(Map<Token, Integer> index) {
+		for (Token word : this.blacklist) {
+			index.remove(word);
 		}
-		return words;
+		return index;
 	}
 	
 	/*
 	 * Create the index of words associated with his hit number in one document
 	 * Input : File input = one document
 	 */
-	private Map<String, Integer> index(File file) {
-		Map<String, Integer> index = new HashMap<String, Integer>();
+	private Map<Token, Integer> index(File file) {
+		Map<Token, Integer> index = new HashMap<Token, Integer>();
 		Document doc = null;
 		try {
 			doc = Jsoup.parse(file, "UTF-8");
@@ -100,16 +100,12 @@ public class Indexator {
 		// two characters)
 		String result = this.getTextNodes(doc.children());
 		Integer occurence;
-		for (String word : result.split("[\\s\\p{Punct}]+")) {
-			Token token = this.tokenizer.get(word);
-			word = token.getRoot();
-			if (word.length() > 1) {
-				occurence = index.get(word);
-				if (occurence == null) { // Word already present in the index
-					index.put(word, 1);
-				} else {
-					index.put(word, occurence + 1);
-				}
+		for (Token token : this.tokenizer.tokenize(result)) {
+			occurence = index.get(token);
+			if (occurence == null) { // Word already present in the index
+				index.put(token, 1);
+			} else {
+				index.put(token, occurence + 1);
 			}
 		}
 		// Remove the stop words
@@ -135,21 +131,6 @@ public class Indexator {
 
 	public void export() {
 		this.db.export();
-	}
-	
-	public static void main(String[] args) {
-		long time = 0;
-		if (log) {
-			time = -System.currentTimeMillis();
-		}
-		File input = new File("CORPUS");
-		Indexator indexator = new Indexator();
-		indexator.index(Arrays.asList(input.listFiles()));
-		if (log) {
-			time += System.currentTimeMillis();
-			System.out.println("Time : " + time / 1000 + "s");
-			indexator.export();
-		} 
 	}
 
 }

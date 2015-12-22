@@ -1,11 +1,9 @@
 package database.writer.item;
 
+import database.item.Unique;
 
+public class Document implements Unique {
 
-
-
-public class Document extends Item {
-	
 	private String path;
 	private Integer weight;
 	
@@ -14,8 +12,7 @@ public class Document extends Item {
 		this.weight = 0;
 	}
 	
-	protected Document(int id, String path, int weight) {
-		this.setId(id);
+	protected Document(String path, int weight) {
 		this.path = path;
 		this.weight = weight;
 	}
@@ -31,14 +28,10 @@ public class Document extends Item {
 	protected void link(int weight) {
 		this.weight += weight * weight;
 	}
-
-	protected String insert() {
-		return "INSERT INTO DOCUMENTS (Id, Path, Weight) " + "VALUES ('" + this.getId() + "', '" + this.path + "', '" + this.weight + "');";
-	}
-
-	@Override
-	protected String update() {
-		return "UPDATE DOCUMENTS set Weight='" + this.weight + "' where Id='" + this.getId() + "';";
-	}
 	
+	@Override
+	public String getName() {
+		return this.path;
+	}
+
 }

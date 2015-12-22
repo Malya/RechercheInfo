@@ -16,7 +16,9 @@ public class Database {
 	public static final String NAME = "seDB";
 	public static final String TABLES[] = { "TERMS", "DOCUMENTS", "LINKS" };
 
-	private static final String SELECT = "SELECT T.Term, D.Path, L.TF FROM LINKS AS L JOIN TERMS AS T JOIN DOCUMENTS AS D ON L.TermID = T.Id AND L.DocID = D.Id WHERE " ;
+	private static final String SELECT = "SELECT R.Root, D.Path, sum(L.TF) FROM LINKS AS L JOIN TERMS AS T JOIN ROOTS AS R JOIN DOCUMENTS AS D ON L.TermID = T.Id AND T.Root = R.Id AND L.DocID = D.Id WHERE " ;
+	private static final String GROUP = "GROUP BY R.Root, D.Path;";
+	
 	
 	private DBHelper database;
 	private Terms terms;
@@ -39,11 +41,11 @@ public class Database {
 		String or = "";
 		for (Token token : tokens) {
 			String root = token.getRoot();
-			query.append(or).append(" T.Term='").append(root).append("'");
-			or = " OR";
+			query.append(or).append(" R.Root='").append(root).append("' ");
+			or = "OR ";
 			load.add(terms.get(root));
 		}
-		query.append(";");
+		query.append(GROUP);
 		new Query(this.database, "load()", query.toString()) {
 			@Override
 			protected void process(ResultSet rs) throws DBException,

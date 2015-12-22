@@ -1,11 +1,12 @@
 package database.writer.item;
 
+import database.item.Correlation;
 import database.writer.item.Document;
 import database.writer.item.Term;
 
 
 
-public class Link {
+public class Link implements Correlation<Term, Document> {
 	
 	private Term term;
 	private Document doc;
@@ -19,8 +20,18 @@ public class Link {
 		this.doc.link(tf);
 	}
 	
-	protected String insert() {
-		return "INSERT INTO LINKS (TermId, DocID, TF) " + "VALUES ('" + this.term.getId() + "', '" + this.doc.getId() + "', '" + this.tf + "');";
+	public int getTF() {
+		return this.tf;
+	}
+
+	@Override
+	public Term getX() {
+		return this.term;
+	}
+
+	@Override
+	public Document getY() {
+		return this.doc;
 	}
 	
 }

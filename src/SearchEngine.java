@@ -45,9 +45,9 @@ public class SearchEngine {
 				evaluator.evaluate("lieu naissance omar sy", "QRELS/qrelQ2.txt", 10);
 				evaluator.evaluate("lieu naissance omar sy", "QRELS/qrelQ2.txt", 25);
 				
-				evaluator.evaluate("acteurs joué avec omar sy", "QRELS/qrelQ9.txt", 5);
-				evaluator.evaluate("acteurs joué avec omar sy", "QRELS/qrelQ9.txt", 10);
-				evaluator.evaluate("acteurs joué avec omar sy", "QRELS/qrelQ9.txt", 25);
+				evaluator.evaluate("acteurs joue avec omar sy", "QRELS/qrelQ9.txt", 5);
+				evaluator.evaluate("acteurs joue avec omar sy", "QRELS/qrelQ9.txt", 10);
+				evaluator.evaluate("acteurs joue avec omar sy", "QRELS/qrelQ9.txt", 25);
 			}
 		}
 	}

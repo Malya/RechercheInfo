@@ -12,7 +12,7 @@ public class Terms extends Items<Term> {
 		super(database);
 	}
 
-	private static final String SELECT = "SELECT Term, IDF FROM TERMS;";
+	private static final String SELECT = "SELECT R.Root, sum(T.IDF) FROM TERMS AS T JOIN ROOTS AS R ON T.Root=R.Id GROUP BY R.Root;";
 	
 	@Override
 	protected Term item(String name) {

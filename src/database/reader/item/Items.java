@@ -42,7 +42,10 @@ public abstract class Items<I> {
 					SQLException {
 				while (rs.next()) {
 					String name = rs.getString(1);
-					refresh(get(name), rs);
+					I item = map.get(name);
+					if (item != null) {
+						refresh(item, rs);
+					}
 				}
 			}
 		}.execute();

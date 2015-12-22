@@ -4,6 +4,6 @@ public interface Token {
 
 	public String getRoot();
 	
-	public String getSuffix();
+	public String toString();
 	
 }

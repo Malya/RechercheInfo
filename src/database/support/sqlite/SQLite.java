@@ -20,7 +20,7 @@ public class SQLite extends DBHelper {
 	}
 	
 	protected Connection open(List<String> args) throws SQLException {
-		return DriverManager.getConnection("jdbc:sqlite:" + args.get(0) + ".db");
+		return DriverManager.getConnection("jdbc:sqlite:" + args.get(0) + ".sqlite");
 	}
 
 }

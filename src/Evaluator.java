@@ -23,9 +23,9 @@ public class Evaluator {
 
 	public void evaluate(String query, String qrelDoc, int nbResults) {
 
-		System.out.println("Requêtes à évaluer: " + query);
+		System.out.println("Requetes a evaluer: " + query);
 		
-		for(int v = 1; v <= 2; v++) {
+		for(int v = 1; v <= 3; v++) {
 			matcher.setVersion(v);
 			List<Entry<Document, Float>> results = new ArrayList<Entry<Document, Float>>(matcher.match(query));
 	
@@ -49,8 +49,8 @@ public class Evaluator {
 			float precision = (float) nbPertinent / i;
 			float rappel = (float) nbPertinent / pertinentDocs.size();
 			/*System.out
-					.println("Nombre de documents évalués: " + i
-							+ ", Totalité de documents pertinents: "
+					.println("Nombre de documents evalues: " + i
+							+ ", Totalite de documents pertinents: "
 							+ pertinentDocs.size());*/
 			System.out.println("VERSION: " + v + " -> P@" + nbResults + ": " + precision + ", R@" + nbResults + ": " + rappel);
 		}
