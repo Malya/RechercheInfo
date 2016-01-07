@@ -1,5 +1,6 @@
-/Matcher.class
-/database
-/Matcher$1.class
 /Evaluator.class
-/Indexator.class
+/SearchEngine.class
+/database/
+/format/
+/index/
+/query/

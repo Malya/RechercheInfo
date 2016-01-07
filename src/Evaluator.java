@@ -25,7 +25,7 @@ public class Evaluator {
 
 		System.out.println("Requetes a evaluer: " + query);
 		
-		for(int v = 1; v <= 3; v++) {
+		for(int v = 1; v <= 7; v++) {
 			matcher.setVersion(v);
 			List<Entry<Document, Float>> results = new ArrayList<Entry<Document, Float>>(matcher.match(query));
 	

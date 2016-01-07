@@ -20,6 +20,17 @@ import format.stemmer.Stemmer;
 
 public class Matcher {
 	
+	/* Version 1 : TF
+	 * Version 2 : Similarité Cosinus avec TF
+	 * Version 3 : TF-IDF
+	 * Version 4 : TF-IDF pondéré par la taille du Document
+	 * Version 5 : Distance de Jaccard avec TF
+	 * Version 6 : Similarité Cosinus avec TF-IDF
+	 * Version 7 : Similarité Cosinus avec TF-IDF pondéré par la taille du Document
+	 * 
+	 * Classement approximatif : 3,6,1,4,2,7,5 
+	 */
+	
 	private Tokenizer tokenizer;
 	private Database database;
 	private int version = 1;
@@ -49,33 +60,53 @@ public class Matcher {
 			for (Link link : term.getBinds()) {
 				score = scores.get(link.getDoc());
 				TF = (float) link.getTF();
-				if(version == 3) {
-					TF = TF / term.getIDF();
+				if(version == 3 || version == 6) {
+					TF = TF * term.getIDF();
 				}
-				if(version == 2) { // VERSION 2 : distance cosinus
+				if(version == 4 || version == 7) { 
+					TF = TF / link.getDoc().getWeight() * term.getIDF() ;
+				}
+				if (score == null) {
+					scores.put(link.getDoc(), TF);
+				} else {
+					scores.put(link.getDoc(), score + TF);
+				}
+				/*
+				if(version == 2 || version == 5) {
 					if (score == null) {
-						scores.put(link.getDoc(), TF * TF);
+						//scores.put(link.getDoc(), TF * TF);
+						scores.put(link.getDoc(), TF);
 					} else {
-						scores.put(link.getDoc(), score + TF * TF);
+						//scores.put(link.getDoc(), score + TF * TF);
+						scores.put(link.getDoc(), score + TF);
 					}
-				} else { // VERSION 1 : somme des TF ; ou 3 : pond�ration TF_IDF 
+				} else { // VERSION 1 : somme des TF ; ou 3 : somme des TF_IDF 
 					if (score == null) {
 						scores.put(link.getDoc(), TF);
 					} else {
 						scores.put(link.getDoc(), score + TF);
 					}
-				} 
+				} */
 			}
 		}
 		
-		if(version == 2) {
+		if(version == 2 || version == 6 || version == 7) {
 			for(Document doc : scores.keySet()) {
-				score = (float) Math.sqrt((double) scores.get(doc));
-				score = (float) (score / (Math.sqrt((double) doc.getWeight()) * Math.sqrt((double) terms.size())));
-				//System.out.println("Weight: " + doc.getWeight() + ", score: " + score);
+				//score = (float) Math.sqrt((double) scores.get(doc));
+				//score = (float) (score / (Math.sqrt((double) doc.getWeight()) * Math.sqrt((double) terms.size())));
+				score = (float) scores.get(doc);
+				score = (float) (score / (Math.sqrt((double) doc.getWeight()*doc.getWeight() * terms.size()*terms.size())));
 				scores.put(doc, score);
 			}
 		}
+		if (version == 5) {
+			for(Document doc : scores.keySet()) {
+				score = (float) scores.get(doc);
+				score = (float) (score / (doc.getWeight()*doc.getWeight() + terms.size()*terms.size() - score));
+				scores.put(doc, score);
+			}
+		}
+		
 		
 		return this.sort(scores);
 	}
