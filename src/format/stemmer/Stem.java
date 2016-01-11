@@ -83,6 +83,7 @@ public class Stem implements Token, CharSequence {
 	private Integer r2;
 	private String stem;
 	private String normal;
+	private String tag;
 	
 	protected Stem(String word) {
 		this.normal = this.init(word);
@@ -569,6 +570,16 @@ public class Stem implements Token, CharSequence {
 	@Override
 	public int hashCode() {
 		return this.normal.hashCode();
+	}
+
+	@Override
+	public void setTag(String tag) {
+		this.tag = tag;		
+	}
+
+	@Override
+	public String getTag() {
+		return tag;
 	}
 	
 }

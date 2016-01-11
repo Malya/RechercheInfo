@@ -13,7 +13,9 @@ public class Stemmer implements Tokenizer {
 	public List<Token> tokenize(String sentence) {
 		List<Token> tokens = new ArrayList<Token>();
 		for (String word : sentence.split("[\\s\\p{Punct}\\'’]+")) {
-			tokens.add(new Stem(word));
+			if(word.length() > 1) {
+				tokens.add(new Stem(word));
+			}
 		}
 		return tokens;
 	}
