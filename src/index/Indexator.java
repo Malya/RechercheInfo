@@ -156,7 +156,9 @@ public class Indexator {
 			
 			for(Token token : tokens) {
 				token.setTag(elem.tagName());
-				System.out.println("Token: " + token.getRoot() + ", tag: " + token.getTag());
+				if (log) { 
+					System.out.println("Token: " + token.getRoot() + ", tag: " + token.getTag());
+				}
 				result.add(token);
 			}
 			

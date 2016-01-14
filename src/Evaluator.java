@@ -21,44 +21,65 @@ public class Evaluator {
 		pertinentDocs = new ArrayList<>();
 	}
 
-	public void evaluate(String query, String qrelDoc, int nbResults) {
+	public void evaluate(String query, String qrelDoc, int nbResultsStart, int nbResultsEnd) {
 
 		System.out.println("Requetes a evaluer: " + query);
 		
 		for(int v = 1; v <= 7; v++) {
 			matcher.setVersion(v);
 			List<Entry<Document, Float>> results = new ArrayList<Entry<Document, Float>>(matcher.match(query));
-	
+			
 			getPertinentDocs(qrelDoc);
+			
+			// Pour la précision
+			int nbPertinentRaking = getNbPertinentInRaking(results,nbResultsStart,nbResultsEnd) ;
+			// Pour le rappel global
+			int nbPertinentTotal = getNbPertinentInResults(results);
 	
-			Iterator<Entry<Document, Float>> it = results.iterator();
-			Entry<Document,Float> entry;
-			int i = 0;
-			int nbPertinent = 0;
-			while (it.hasNext() && i < nbResults) {
-				i++;
-				entry = it.next();
-				String doc = entry.getKey().getPath();
-				if (pertinentDocs.contains(doc)) {
-					nbPertinent++;
-				} else if (VERBOSE) {
-					System.out.println("Document non pertinent: " + doc);
-				}
-			}
-	
-			float precision = (float) nbPertinent / i;
-			float rappel = (float) nbPertinent / pertinentDocs.size();
-			/*System.out
-					.println("Nombre de documents evalues: " + i
-							+ ", Totalite de documents pertinents: "
-							+ pertinentDocs.size());*/
-			System.out.println("VERSION: " + v + " -> P@" + nbResults + ": " + precision + ", R@" + nbResults + ": " + rappel);
+			float precision = ((float) nbPertinentRaking / (nbResultsEnd-nbResultsStart)) ;
+			float rappelRaking = (float) nbPertinentRaking / pertinentDocs.size();
+			float rappelGlobal = (float) nbPertinentTotal / pertinentDocs.size();
+			
+			System.out.println("VERSION: " + v + " -> P@" + nbResultsEnd + ": " + precision + ", R@" + nbResultsEnd + ": " + rappelRaking +", Global R:" + rappelGlobal);
 		}
 
 	}
 
+	private int getNbPertinentInRaking(List<Entry<Document, Float>> results, int nbResultsStart, int nbResultsEnd) {
+		Iterator<Entry<Document, Float>> it = results.iterator();
+		Entry<Document,Float> entry;
+		int i = nbResultsStart;
+		int nbPertinent = 0;
+		while (it.hasNext() && i < nbResultsEnd) {
+			i++;
+			entry = it.next();
+			String doc = entry.getKey().getPath();
+			if (pertinentDocs.contains(doc)) {
+				nbPertinent++;
+			} else if (VERBOSE) {
+				System.out.println("Document non pertinent: " + doc);
+			}
+		}
+		return nbPertinent ;
+	}
+	
+	private int getNbPertinentInResults(List<Entry<Document, Float>> results) {
+		Iterator<Entry<Document, Float>> it = results.iterator();
+		Entry<Document,Float> entry;
+		int nbPertinent = 0;
+		while (it.hasNext()) {
+			entry = it.next();
+			String doc = entry.getKey().getPath();
+			if (pertinentDocs.contains(doc)) {
+				nbPertinent++;
+			} else if (VERBOSE) {
+				System.out.println("Document non pertinent: " + doc);
+			}
+		}
+		return nbPertinent ;
+	}
+	
 	private void getPertinentDocs(String qrelDoc) {
-
 		pertinentDocs.clear();
 		BufferedReader reader = null;
 		try {

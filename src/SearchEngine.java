@@ -37,17 +37,17 @@ public class SearchEngine {
 				}
 			} else if (opt.equals("-e")) {
 				Evaluator evaluator = new Evaluator(new Matcher());
-				evaluator.evaluate("personnes Intouchables", "QRELS/qrelQ1.txt", 5);
-				evaluator.evaluate("personnes Intouchables", "QRELS/qrelQ1.txt", 10);
-				evaluator.evaluate("personnes Intouchables", "QRELS/qrelQ1.txt", 25);
+				evaluator.evaluate("personnes Intouchables", "QRELS/qrelQ1.txt", 0,5);
+				evaluator.evaluate("personnes Intouchables", "QRELS/qrelQ1.txt", 5,10);
+				evaluator.evaluate("personnes Intouchables", "QRELS/qrelQ1.txt", 10,25);
 				
-				evaluator.evaluate("lieu naissance omar sy", "QRELS/qrelQ2.txt", 5);
-				evaluator.evaluate("lieu naissance omar sy", "QRELS/qrelQ2.txt", 10);
-				evaluator.evaluate("lieu naissance omar sy", "QRELS/qrelQ2.txt", 25);
+				evaluator.evaluate("lieu naissance omar sy", "QRELS/qrelQ2.txt", 0,5);
+				evaluator.evaluate("lieu naissance omar sy", "QRELS/qrelQ2.txt", 5,10);
+				evaluator.evaluate("lieu naissance omar sy", "QRELS/qrelQ2.txt", 10,25);
 				
-				evaluator.evaluate("acteurs joue avec omar sy", "QRELS/qrelQ9.txt", 5);
-				evaluator.evaluate("acteurs joue avec omar sy", "QRELS/qrelQ9.txt", 10);
-				evaluator.evaluate("acteurs joue avec omar sy", "QRELS/qrelQ9.txt", 25);
+				evaluator.evaluate("acteurs joue avec omar sy", "QRELS/qrelQ9.txt", 0,5);
+				evaluator.evaluate("acteurs joue avec omar sy", "QRELS/qrelQ9.txt", 5,10);
+				evaluator.evaluate("acteurs joue avec omar sy", "QRELS/qrelQ9.txt", 10,25);
 			}
 		}
 	}
