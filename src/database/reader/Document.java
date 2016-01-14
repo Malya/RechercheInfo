@@ -1,7 +1,9 @@
 package database.reader;
 
+import database.item.Unique;
 
-public class Document {
+
+public class Document implements Unique {
 	
 	private Integer weight;
 	
@@ -25,6 +27,11 @@ public class Document {
 	}
 	
 	public String toString() {
+		return this.path;
+	}
+
+	@Override
+	public String getName() {
 		return this.path;
 	}
 	

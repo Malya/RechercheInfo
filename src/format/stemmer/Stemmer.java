@@ -14,7 +14,10 @@ public class Stemmer implements Tokenizer {
 		List<Token> tokens = new ArrayList<Token>();
 		for (String word : sentence.split("[\\s\\p{Punct}\\'’]+")) {
 			if(word.length() > 1) {
-				tokens.add(new Stem(word));
+				Stem stem = new Stem(word);
+				if (stem.length() > 1) {
+					tokens.add(stem);
+				}
 			}
 		}
 		return tokens;
@@ -24,7 +27,10 @@ public class Stemmer implements Tokenizer {
 		List<Token> tokens = new ArrayList<Token>(words.size());
 		for (String word : words) {
 			if (word.length() > 1) {
-				tokens.add(new Stem(word));
+				Stem stem = new Stem(word);
+				if (stem.length() > 1) {
+					tokens.add(stem);
+				}
 			}
 		}
 		return tokens;

@@ -37,16 +37,21 @@ public class Matcher {
 	
 	public Matcher() {
 		this.tokenizer = new Stemmer();;
-		this.database = new Database();
+		try {
+			this.database = new Database();
+		} catch (DBException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
 	}
 	
-	public List<Entry<Document, Float>> match(String query) {
+	public List<Entry<Document, Double>> match(String query) {
 		return this.match(Arrays.asList(query.split("[\\s\\p{Punct}]+")));
 	}
 	
-	public List<Entry<Document, Float>> match(List<String> query) {
+	public List<Entry<Document, Double>> match(List<String> query) {
 		
-		Map<Document, Float> scores = new HashMap<Document, Float>();
+		Map<Document, Double> scores = new HashMap<Document, Double>();
 		
 		Collection<Term> terms = null;
 		try {
@@ -55,11 +60,11 @@ public class Matcher {
 			e.printStackTrace();
 			System.exit(0);
 		}
-		Float score, TF;
+		Double score, TF;
 		for (Term term : terms) {
 			for (Link link : term.getBinds()) {
 				score = scores.get(link.getDoc());
-				TF = (float) link.getTF();
+				TF = (double) link.getTF();
 				if(version == 3 || version == 6) {
 					TF = TF * term.getIDF();
 				}
@@ -94,15 +99,15 @@ public class Matcher {
 			for(Document doc : scores.keySet()) {
 				//score = (float) Math.sqrt((double) scores.get(doc));
 				//score = (float) (score / (Math.sqrt((double) doc.getWeight()) * Math.sqrt((double) terms.size())));
-				score = (float) scores.get(doc);
-				score = (float) (score / (Math.sqrt((double) doc.getWeight()*doc.getWeight() * terms.size()*terms.size())));
+				score = (double) scores.get(doc);
+				score = (double) (score / (Math.sqrt((double) doc.getWeight()*doc.getWeight() * terms.size()*terms.size())));
 				scores.put(doc, score);
 			}
 		}
 		if (version == 5) {
 			for(Document doc : scores.keySet()) {
-				score = (float) scores.get(doc);
-				score = (float) (score / (doc.getWeight()*doc.getWeight() + terms.size()*terms.size() - score));
+				score = (double) scores.get(doc);
+				score = (double) (score / (doc.getWeight()*doc.getWeight() + terms.size()*terms.size() - score));
 				scores.put(doc, score);
 			}
 		}
@@ -111,13 +116,13 @@ public class Matcher {
 		return this.sort(scores);
 	}
 	
-	private List<Entry<Document, Float>> sort(Map<Document, Float> map) {
-		List<Entry<Document, Float>> list = new LinkedList<Entry<Document, Float>>(map.entrySet());
+	private List<Entry<Document, Double>> sort(Map<Document, Double> map) {
+		List<Entry<Document, Double>> list = new LinkedList<Entry<Document, Double>>(map.entrySet());
 
 		// Defined Custom Comparator here
-		Collections.sort(list, new Comparator<Entry<Document, Float>>() {
-			public int compare(Entry<Document, Float> e1, Entry<Document, Float> e2) {
-				float result = e2.getValue() - e1.getValue();
+		Collections.sort(list, new Comparator<Entry<Document, Double>>() {
+			public int compare(Entry<Document, Double> e1, Entry<Document, Double> e2) {
+				double result = e2.getValue() - e1.getValue();
 				if(result < 0)
 					return -1;
 				else if(result == 0) 

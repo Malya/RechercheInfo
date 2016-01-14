@@ -8,7 +8,7 @@ import database.support.DBHelper;
 
 public class Documents extends Items<Document> {
 
-	private static final String SELECT = "SELECT Path, Weight FROM DOCUMENTS;";
+	private static final String SELECT = "SELECT Path, Weight FROM DOCUMENTS";
 	
 	public Documents(DBHelper database) {
 		super(database);
@@ -28,6 +28,11 @@ public class Documents extends Items<Document> {
 	protected void refresh(Document doc, ResultSet rs) throws SQLException {
 		int weight = rs.getInt(2);
 		doc.setWeight(weight);
+	}
+
+	@Override
+	protected String property() {
+		return "Path";
 	}
 
 }

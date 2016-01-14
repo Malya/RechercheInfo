@@ -8,32 +8,32 @@ import database.item.Unique;
 public class Term implements Unique {
 	
 	private String word;
-	private Integer idf;
+	private Integer gtf;
 	
 	protected Term(String word) {
 		this.word = word;
-		this.idf = 0;
+		this.gtf = 0;
 	}
 	
-	protected Term(String word, int idf) {
+	protected Term(String word, int gtf) {
 		this.word = word;
-		this.idf = idf;
+		this.gtf = gtf;
 	}
 	
 	public String getWord() {
 		return this.word;
 	}
 	
-	public int getIDF() {
-		return this.idf;
+	public int getGTF() {
+		return this.gtf;
 	}
 	
 	protected void links(int tf) {
-		this.idf += tf;
+		this.gtf += tf;
 	}
 	
 	protected void unlinks(int tf) {
-		this.idf -= tf;
+		this.gtf -= tf;
 	}
 
 	@Override

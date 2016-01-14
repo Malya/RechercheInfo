@@ -14,9 +14,9 @@ public class Terms extends Items<Term> {
 	private static final String TABLE = "CREATE TABLE TERMS                      " + 
 										"(Id   INTEGER PRIMARY KEY,              " + 
 										" Term CHAR(20) NOT NULL UNIQUE,         " +
-										" IDF  INT NOT NULL)                     " ;
+										" GTF  INT NOT NULL)                     " ;
 
-	private static final String SELECT = "SELECT Id, Term, IDF FROM TERMS; " ;
+	private static final String SELECT = "SELECT Id, Term, GTF FROM TERMS; " ;
 	
 	public Terms(DBHelper db) throws DBException {
 		super(db);
@@ -42,18 +42,18 @@ public class Terms extends Items<Term> {
 		try {
 			term.links(rs.getInt(3));
 		} catch (SQLException e) {
-			throw new DBException("refresh: Unable to get IDF field");
+			throw new DBException("refresh: Unable to get GTF field");
 		}
 	}
 
 	@Override
 	protected String insert(Item<Term> term) {
-		return "INSERT INTO TERMS (Id, Term, IDF) " + "VALUES ('" + term.getId() + "', '" + term.getUnique().getWord() + "', '" + term.getUnique().getIDF() + "');";
+		return "INSERT INTO TERMS (Id, Term, GTF) " + "VALUES ('" + term.getId() + "', '" + term.getUnique().getWord() + "', '" + term.getUnique().getGTF() + "');";
 	}
 
 	@Override
 	protected String update(Item<Term> term) {
-		return "UPDATE TERMS set IDF='" + term.getUnique().getIDF() + "' where Id='" + term.getId() + "';";
+		return "UPDATE TERMS set GTF='" + term.getUnique().getGTF() + "' where Id='" + term.getId() + "';";
 	}
 	
 	protected Map<String, Item<Term>> map() throws DBException {

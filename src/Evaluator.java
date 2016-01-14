@@ -27,14 +27,14 @@ public class Evaluator {
 		
 		for(int v = 1; v <= 7; v++) {
 			matcher.setVersion(v);
-			List<Entry<Document, Float>> results = new ArrayList<Entry<Document, Float>>(matcher.match(query));
+			List<Entry<Document, Double>> results = new ArrayList<Entry<Document, Double>>(matcher.match(query));
 			
 			getPertinentDocs(qrelDoc);
 			
 			// Pour la précision
-			int nbPertinentRaking = getNbPertinentInRaking(results,nbResultsStart,nbResultsEnd) ;
+			double nbPertinentRaking = getNbPertinentInRaking(results,nbResultsStart,nbResultsEnd) ;
 			// Pour le rappel global
-			int nbPertinentTotal = getNbPertinentInResults(results);
+			double nbPertinentTotal = getNbPertinentInResults(results);
 	
 			float precision = ((float) nbPertinentRaking / (nbResultsEnd-nbResultsStart)) ;
 			float rappelRaking = (float) nbPertinentRaking / pertinentDocs.size();
@@ -45,9 +45,9 @@ public class Evaluator {
 
 	}
 
-	private int getNbPertinentInRaking(List<Entry<Document, Float>> results, int nbResultsStart, int nbResultsEnd) {
-		Iterator<Entry<Document, Float>> it = results.iterator();
-		Entry<Document,Float> entry;
+	private int getNbPertinentInRaking(List<Entry<Document, Double>> results, int nbResultsStart, int nbResultsEnd) {
+		Iterator<Entry<Document, Double>> it = results.iterator();
+		Entry<Document,Double> entry;
 		int i = nbResultsStart;
 		int nbPertinent = 0;
 		while (it.hasNext() && i < nbResultsEnd) {
@@ -63,9 +63,9 @@ public class Evaluator {
 		return nbPertinent ;
 	}
 	
-	private int getNbPertinentInResults(List<Entry<Document, Float>> results) {
-		Iterator<Entry<Document, Float>> it = results.iterator();
-		Entry<Document,Float> entry;
+	private int getNbPertinentInResults(List<Entry<Document, Double>> results) {
+		Iterator<Entry<Document, Double>> it = results.iterator();
+		Entry<Document,Double> entry;
 		int nbPertinent = 0;
 		while (it.hasNext()) {
 			entry = it.next();

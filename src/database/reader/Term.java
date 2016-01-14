@@ -3,10 +3,23 @@ package database.reader;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class Term {
+import database.item.Unique;
+
+public class Term implements Unique {
+	
+	private static int documents;
+	private static int terms;
+	
+	protected static void setDocuments(int docs) {
+		documents = docs;
+	}
+	
+	protected static void setTerms(int ts) {
+		terms = ts;
+	}
 	
 	private String word;
-	private Integer idf;
+	private Integer gtf;
 	private Collection<Link> binds;
 	
 	protected Term(String word) {
@@ -18,12 +31,12 @@ public class Term {
 		return this.word;
 	}
 	
-	protected void setIDF(int idf) {
-		this.idf = idf;
+	protected void setGTF(int gtf) {
+		this.gtf = gtf;
 	}
 	
-	public int getIDF() {
-		return this.idf;
+	public double getIDF() {
+		return Math.log10((double) documents/this.binds.size());
 	}
 	
 	protected void links(Document doc, int tf) {
@@ -32,6 +45,11 @@ public class Term {
 	
 	public Collection<Link> getBinds() {
 		return this.binds;
+	}
+
+	@Override
+	public String getName() {
+		return this.word;
 	}
 	
 }

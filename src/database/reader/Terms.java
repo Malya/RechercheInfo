@@ -12,7 +12,7 @@ public class Terms extends Items<Term> {
 		super(database);
 	}
 
-	private static final String SELECT = "SELECT R.Root, sum(T.IDF) FROM TERMS AS T JOIN ROOTS AS R ON T.Root=R.Id GROUP BY R.Root;";
+	private static final String SELECT = "SELECT Term, GTF FROM TERMS";
 	
 	@Override
 	protected Term item(String name) {
@@ -27,7 +27,12 @@ public class Terms extends Items<Term> {
 	@Override
 	protected void refresh(Term term, ResultSet rs) throws SQLException {
 		int idf = rs.getInt(2);
-		term.setIDF(idf);
+		term.setGTF(idf);
+	}
+
+	@Override
+	protected String property() {
+		return "Term";
 	}
 
 }
