@@ -561,7 +561,7 @@ public class Stem implements Token, CharSequence {
 		if (o != null) {
 			if (o instanceof Stem) {
 				Stem s = (Stem) o;
-				return this.normal.equals(s.normal);
+				return this.stem.equals(s.stem);
 			}
 		}
 		return false;
@@ -569,7 +569,7 @@ public class Stem implements Token, CharSequence {
 	
 	@Override
 	public int hashCode() {
-		return this.normal.hashCode();
+		return this.stem.hashCode();
 	}
 
 	@Override

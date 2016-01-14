@@ -6,24 +6,20 @@ import java.util.Map;
 
 import database.exception.DBException;
 import database.item.Item;
-import database.item.Join;
-import database.item.Reference;
+import database.item.Items;
 import database.support.DBHelper;
 
-public class Terms extends Reference<Term, Root> {
+public class Terms extends Items<Term> {
 	
 	private static final String TABLE = "CREATE TABLE TERMS                      " + 
 										"(Id   INTEGER PRIMARY KEY,              " + 
 										" Term CHAR(20) NOT NULL UNIQUE,         " +
-										" IDF  INT NOT NULL,                     " +
-										" Root INT NOT NULL,                     " +
-										" FOREIGN KEY(Root) REFERENCES ROOT(Id)) " ;
+										" IDF  INT NOT NULL)                     " ;
 
 	private static final String SELECT = "SELECT Id, Term, IDF FROM TERMS; " ;
 	
-	
-	public Terms(DBHelper db, Roots roots) throws DBException {
-		super(db, roots);
+	public Terms(DBHelper db) throws DBException {
+		super(db);
 	}
 
 	@Override
@@ -51,12 +47,12 @@ public class Terms extends Reference<Term, Root> {
 	}
 
 	@Override
-	protected String insert(Join<Term, Root> term) {
-		return "INSERT INTO TERMS (Id, Term, IDF, Root) " + "VALUES ('" + term.getId() + "', '" + term.getUnique().getWord() + "', '" + term.getUnique().getIDF() + "', '" + term.getY().getId() + "');";
+	protected String insert(Item<Term> term) {
+		return "INSERT INTO TERMS (Id, Term, IDF) " + "VALUES ('" + term.getId() + "', '" + term.getUnique().getWord() + "', '" + term.getUnique().getIDF() + "');";
 	}
 
 	@Override
-	protected String update(Join<Term, Root> term) {
+	protected String update(Item<Term> term) {
 		return "UPDATE TERMS set IDF='" + term.getUnique().getIDF() + "' where Id='" + term.getId() + "';";
 	}
 	

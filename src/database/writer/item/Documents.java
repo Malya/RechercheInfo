@@ -17,8 +17,11 @@ public class Documents extends Items<Document> {
 	
 	private static final String SELECT = "SELECT Id, Path FROM DOCUMENTS; " ;
 	
-	public Documents(DBHelper db) throws DBException {
+	private Properties stats;
+	
+	public Documents(DBHelper db, Properties stats) throws DBException {
 		super(db);
+		this.stats = stats;
 	}
 
 	@Override
@@ -42,6 +45,7 @@ public class Documents extends Items<Document> {
 
 	@Override
 	protected String insert(Item<Document> doc) {
+		this.stats.addDocument();
 		return "INSERT INTO DOCUMENTS (Id, Path, Weight) " + "VALUES ('" + doc.getId() + "', '" + doc.getUnique().getPath() + "', '" + doc.getUnique().getWeight() + "');";
 	}
 

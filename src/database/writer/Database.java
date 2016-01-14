@@ -10,7 +10,7 @@ import database.support.DBHelper;
 import database.support.sqlite.SQLite;
 import database.writer.item.Documents;
 import database.writer.item.Links;
-import database.writer.item.Roots;
+import database.writer.item.Properties;
 import database.writer.item.Terms;
 import format.Token;
 import format.Tokenizer;
@@ -19,11 +19,11 @@ import format.stemmer.Stemmer;
 public class Database {
 
 	public static final String NAME = "seDB";
-	public static final String TABLES[] = {"TERMS", "ROOTS", "DOCUMENTS", "LINKS"};
+	public static final String TABLES[] = {"STATS", "TERMS", "DOCUMENTS", "LINKS"};
  	
 	private DBHelper db;
 	private Tokenizer tk;
-	private Roots roots;
+	private Properties stats;
 	private Terms terms;
 	private Documents docs;
 	private Links links;
@@ -32,10 +32,10 @@ public class Database {
 		try {
 			this.db = new SQLite(NAME);
 			this.tk = new Stemmer();
-			this.roots = new Roots(db);
-			this.terms = new Terms(db, this.roots);
-			this.docs = new Documents(db);
-			this.links = new Links(db, this.terms, this.docs);
+			this.stats = new Properties(this.db);
+			this.terms = new Terms(this.db);
+			this.docs = new Documents(this.db, this.stats);
+			this.links = new Links(db, this.terms, this.docs, this.stats);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(0);
@@ -47,13 +47,13 @@ public class Database {
 	}
 	
 	public void links(Token value, String doc, int tf) {
-		this.links.links(value.toString(), doc, tf);
-		this.terms.attach(value.toString(), value.getRoot());
+		this.links.links(value.getRoot(), doc, tf);
 	}
 
 	public void flush() {
 		try {
 			this.links.flush();
+			this.stats.flush();
 		} catch (DBException e) {
 			e.printStackTrace();
 			System.exit(0);

@@ -26,13 +26,23 @@ public class Links extends Binds<Term, Document> {
 	
 	private static final String SELECT = "SELECT Term, Path, TF FROM LINKS AS L JOIN TERMS AS T JOIN DOCUMENTS AS D ON L.TermID = T.Id AND L.DocID = D.Id; " ;
 	
-	public Links(DBHelper db, Terms terms, Documents docs) throws DBException {
+	private Properties stats;
+	
+	public Links(DBHelper db, Terms terms, Documents docs, Properties stats) throws DBException {
 		super(db, terms, docs);
+		this.stats = stats;
 	}
 	
 	@Override
 	protected String table() {
 		return TABLE;
+	}
+	
+	@Override
+	public void links(String term, String doc, Object... args) {
+		super.links(term, doc, args);
+		Integer tf = (Integer) args[0];
+		this.stats.addTerm(tf);
 	}
 	
 	@Override
@@ -59,6 +69,7 @@ public class Links extends Binds<Term, Document> {
 						String term = rs.getString(1);
 						int tf = rs.getInt(3);
 						terms.get(term).getUnique().unlinks(tf);
+						stats.removeTerm(tf);
 						if (!done.contains(doc)) {
 							done.add(doc);
 							sb.append("DELETE FROM LINKS WHERE DocID='" + doc.getId() + "';");
