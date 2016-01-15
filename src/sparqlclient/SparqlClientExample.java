@@ -1,6 +1,8 @@
 package sparqlclient;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class SparqlClientExample {
 
@@ -8,40 +10,41 @@ public class SparqlClientExample {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        SparqlClient sparqlClient = new SparqlClient("192.168.250.91:8080/sparqluedo");
+        SparqlClient sparqlClient = new SparqlClient("localhost:3030/space");
 
-        String query = "ASK WHERE { ?s ?p ?o }";
-        boolean serverIsUp = sparqlClient.ask(query);
+        String upQuery = "ASK WHERE { ?s ?p ?o }";
+        boolean serverIsUp = sparqlClient.ask(upQuery);
         if (serverIsUp) {
             System.out.println("server is UP");
 
-            nbPersonnesParPiece(sparqlClient);
+            String query = "lieu naissance;omar sy";
+            HashSet<Map<String, String>> newQuery = new HashSet<Map<String, String>>();
+            for(String term : query.split(";")) {
+            	String sparqlQuery = createSynonymQuery(term);
+            	System.out.println("Query: " + sparqlQuery);
+            	newQuery.addAll(sparqlClient.select(sparqlQuery));
+            }
 
-            System.out.println("ajout d'une personne dans le bureau:");
-            query = "PREFIX : <http://www.lamaisondumeurtre.fr#>\n"
-                    + "PREFIX instances: <http://www.lamaisondumeurtre.fr/instances#>\n"
-                    + "INSERT DATA\n"
-                    + "{\n"
-                    + "  instances:Bob :personneDansPiece instances:Bureau.\n"
-                    + "}\n";
-            sparqlClient.update(query);
-
-            nbPersonnesParPiece(sparqlClient);
-
-            System.out.println("suppression d'une personne du bureau:");
-            query = "PREFIX : <http://www.lamaisondumeurtre.fr#>\n"
-                    + "PREFIX instances: <http://www.lamaisondumeurtre.fr/instances#>\n"
-                    + "DELETE DATA\n"
-                    + "{\n"
-                    + "  instances:Bob :personneDansPiece instances:Bureau.\n"
-                    + "}\n";
-            sparqlClient.update(query);
+            for(Map<String, String> res : newQuery) {
+            	for(Entry<String, String> entry : res.entrySet()) {
+            		System.out.println(entry.getKey() + " : " + entry.getValue());
+            	}
+            }
             
-            nbPersonnesParPiece(sparqlClient);
             
         } else {
             System.out.println("service is DOWN");
         }
+    }
+    
+    public static String createSynonymQuery(String term) {
+    	return "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n" +
+        		"SELECT ?label WHERE { \n" +
+        		 "?res rdfs:label ?labels. \n" +
+        		 "FILTER (regex(?labels, '^" + term +"$')). \n" +
+        		 "?res rdfs:label ?label. \n" +
+    			"} \n"	+
+    			"LIMIT 20";
     }
     
     private static void nbPersonnesParPiece(SparqlClient sparqlClient) {
