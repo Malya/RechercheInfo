@@ -77,6 +77,7 @@ public class Evaluator {
 			
 			System.out.println(v + " -> S@" + nbResultsEnd + ": " + decimal.format(rank) + ", P@" + nbResultsEnd + ": " + decimal.format(precision) + ", R@" + nbResultsEnd + ": " + decimal.format(rappelRaking)); // +", Global R:" + rappelGlobal);
 		}
+		System.out.println("");
 
 	}
 
