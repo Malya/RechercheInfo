@@ -42,6 +42,7 @@ public class Evaluator {
 			
 			System.out.println("VERSION: " + v + " -> P@" + nbResultsEnd + ": " + precision + ", R@" + nbResultsEnd + ": " + rappelRaking +", Global R:" + rappelGlobal);
 		}
+		System.out.println("");
 
 	}
 
