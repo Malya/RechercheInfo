@@ -1,9 +1,10 @@
 import index.Indexator;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
-import query.Matcher;
+import version.Version;
 
 
 public class SearchEngine {
@@ -11,7 +12,7 @@ public class SearchEngine {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		boolean log = false;
 		boolean print = false;
 		long time = 0;
@@ -36,18 +37,20 @@ public class SearchEngine {
 					indexator.export();
 				}
 			} else if (opt.equals("-e")) {
-				Evaluator evaluator = new Evaluator(new Matcher());
-				evaluator.evaluate("personnes Intouchables", "QRELS/qrelQ1.txt", 0,5);
-				evaluator.evaluate("personnes Intouchables", "QRELS/qrelQ1.txt", 5,10);
-				evaluator.evaluate("personnes Intouchables", "QRELS/qrelQ1.txt", 10,25);
+				Evaluator evaluator = new Evaluator("personnes Intouchables", "QRELS/qrelQ1.txt");
+				evaluator.evaluate(0, 5, Version.values());
+				evaluator.evaluate(5, 10, Version.values());
+				evaluator.evaluate(10, 25, Version.values());
 				
-				evaluator.evaluate("lieu naissance omar sy", "QRELS/qrelQ2.txt", 0,5);
-				evaluator.evaluate("lieu naissance omar sy", "QRELS/qrelQ2.txt", 5,10);
-				evaluator.evaluate("lieu naissance omar sy", "QRELS/qrelQ2.txt", 10,25);
+				evaluator = new Evaluator("lieu naissance omar sy", "QRELS/qrelQ2.txt");
+				evaluator.evaluate(0, 5, Version.values());
+				evaluator.evaluate(5, 10, Version.values());
+				evaluator.evaluate(10, 25, Version.values());
 				
-				evaluator.evaluate("acteurs joue avec omar sy", "QRELS/qrelQ9.txt", 0,5);
-				evaluator.evaluate("acteurs joue avec omar sy", "QRELS/qrelQ9.txt", 5,10);
-				evaluator.evaluate("acteurs joue avec omar sy", "QRELS/qrelQ9.txt", 10,25);
+				evaluator = new Evaluator("acteurs joue avec omar sy", "QRELS/qrelQ9.txt");
+				evaluator.evaluate(0, 5, Version.values());
+				evaluator.evaluate(5, 10, Version.values());
+				evaluator.evaluate(10, 25, Version.values());
 			}
 		}
 	}

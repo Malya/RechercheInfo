@@ -39,6 +39,10 @@ public class Term implements Unique {
 		return Math.log10((double) documents/this.binds.size());
 	}
 	
+	public double getGDF() {
+		return Math.log10((double) terms/this.gtf);
+	}
+	
 	protected void links(Document doc, int tf) {
 		this.binds.add(new Link(doc, tf));
 	}

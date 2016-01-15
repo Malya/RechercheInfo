@@ -10,7 +10,6 @@ import database.exception.DBException;
 import database.item.Unique;
 import database.support.DBHelper;
 import database.support.Query;
-import format.Token;
 
 public abstract class Items<I extends Unique> {
 
