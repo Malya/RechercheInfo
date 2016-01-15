@@ -41,7 +41,7 @@ public class SparqlClientExample {
     	return "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n" +
         		"SELECT ?label WHERE { \n" +
         		 "?res rdfs:label ?labels. \n" +
-        		 "FILTER (regex(?labels, '^" + term +"$')). \n" +
+        		 "FILTER (lcase(str(?labels)) = \""+ term +"\"). \n" +
         		 "?res rdfs:label ?label. \n" +
     			"} \n"	+
     			"LIMIT 20";

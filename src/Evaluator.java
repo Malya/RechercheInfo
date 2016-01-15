@@ -68,7 +68,9 @@ public class Evaluator {
 		Iterator<Entry<Document, Double>> it = results.iterator();
 		Entry<Document,Double> entry;
 		int nbPertinent = 0;
-		while (it.hasNext()) {
+		int i = 0;
+		while (it.hasNext() && i<pertinentDocs.size()) {
+			i++;
 			entry = it.next();
 			String doc = entry.getKey().getPath();
 			if (pertinentDocs.contains(doc)) {
