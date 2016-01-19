@@ -69,9 +69,17 @@ public class Semantic implements Matcher {
 		List<String> terms = new ArrayList<String>() ;
 		if (serverIsUp) {
 			HashSet<Map<String, String>> enrichedQuery = new HashSet<Map<String, String>>();
+			String sparqlQuery;
 	        for(String term : query.split(";")) {
-	        	String sparqlQuery = createSynonymQuery(term.trim().toLowerCase());
-	        	enrichedQuery.addAll((Collection<? extends Map<String, String>>) sparqlClient.select(sparqlQuery));
+	        	sparqlQuery = createSynonymQuery(term.trim().toLowerCase()); //TODO: Add a cleaning function ? 
+	        	enrichedQuery.addAll(sparqlClient.select(sparqlQuery));
+	        	
+	        	for(String term2 : query.split(";")) {
+	        		if(!term.contentEquals(term2)) {
+	        			sparqlQuery = createInstanceQuery(term, term2);
+	        			enrichedQuery.addAll(sparqlClient.select(sparqlQuery));
+	        		}
+	        	}
 	        }
 	        
 	        for(Map<String, String> res : enrichedQuery) {
@@ -99,6 +107,19 @@ public class Semantic implements Matcher {
     			"} \n"	+
     			"LIMIT 20";
     }
+	
+	private String createInstanceQuery(String res, String property) {
+    	return "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n" +
+        		"SELECT ?label WHERE { \n" +
+        		 "?res rdfs:label ?labelsRes. \n" +
+        		 "FILTER (lcase(str(?labelsRes)) = \"" + res +"\"). \n" +
+        		 "?prop rdfs:label ?labelsProp. \n" +
+        		 "FILTER (lcase(str(?labelsProp)) = \"" + property +"\"). \n" +
+        		 "?res ?prop ?result. \n" +
+        		 "?result rdfs:label ?label. \n" +
+    			"} \n"	+
+    			"LIMIT 20";
+	}
 	
 	private List<String> clean(List<String> list) {
 		for (Token word : this.blacklist) {

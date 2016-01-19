@@ -23,7 +23,14 @@ public class SparqlClientExample {
             for(String term : query.split(";")) {
             	String sparqlQuery = createSynonymQuery(term);
             	System.out.println("Query: \n" + sparqlQuery);
-            	newQuery.addAll((Collection<? extends Map<String, String>>) sparqlClient.select(sparqlQuery));
+            	newQuery.addAll(sparqlClient.select(sparqlQuery));
+            	
+	        	for(String term2 : query.split(";")) {
+	        		if(!term.contentEquals(term2)) {
+	        			sparqlQuery = createInstanceQuery(term, term2);
+	        			newQuery.addAll(sparqlClient.select(sparqlQuery));
+	        		}
+	        	}
             }
 
             for(Map<String, String> res : newQuery) {
@@ -45,9 +52,22 @@ public class SparqlClientExample {
         		 "FILTER (lcase(str(?labels)) = \"" + term +"\"). \n" +
         		 "?res rdfs:label ?label. \n" +
     			"} \n"	+
-    			"LIMIT 20";
+    			"LIMIT 40";
     }
     
+	public static String createInstanceQuery(String res, String property) {
+    	return "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n" +
+        		"SELECT ?label WHERE { \n" +
+        		 "?res rdfs:label ?labelsRes. \n" +
+        		 "FILTER (lcase(str(?labelsRes)) = \"" + res +"\"). \n" +
+        		 "?prop rdfs:label ?labelsProp. \n" +
+        		 "FILTER (lcase(str(?labelsProp)) = \"" + property +"\"). \n" +
+        		 "?res ?prop ?result. \n" +
+        		 "?result rdfs:label ?label. \n" +
+    			"} \n"	+
+    			"LIMIT 20";
+	}
+	
     private static void nbPersonnesParPiece(SparqlClient sparqlClient) {
         String query = "PREFIX : <http://www.lamaisondumeurtre.fr#>\n"
                     + "SELECT ?piece (COUNT(?personne) AS ?nbPers) WHERE\n"
