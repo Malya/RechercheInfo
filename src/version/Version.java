@@ -57,7 +57,7 @@ public enum Version {
 			return link.getTF() * term.getGDF();
 		}
 	}),
-	V9(9, "17.01.16", "Semantic", new Semantic(new Basic() {
+	V9("17.01.16", "Semantic", new Semantic(new Basic() {
 		@Override
 		protected double match(Term term, Link link) {
 			return link.getTF() * term.getGDF();
@@ -78,6 +78,10 @@ public enum Version {
 	
 	public String info() {
 		return this.toString() + "(" + new SimpleDateFormat("dd.MM.yy").format(this.date) + ")::" + this.description; 
+	}
+	
+	public String getDescription() {
+		return description;
 	}
 	
 }

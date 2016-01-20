@@ -21,13 +21,21 @@ public class Evaluator {
 
 	private final static NumberFormat decimal = new DecimalFormat("#0.00"); 
 	
-	private String query;
 	private Map<String, Float> pertinents;
 	private Map<Version, List<Entry<Document, Double>>> cache;
 	
-	public Evaluator(String query, String qrelDoc) throws IOException {
-		this.query = query;
+	private String queries[] = {"personnes;Intouchables", "lieu naissance; omar sy", "personnes; récompensées; Intouchables",
+			"palmarès; Globes de Cristal; 2012", "membre;jury;Globes de Cristal;2012", "prix; omar sy; Globes de Cristal; 2012",
+			"lieu; Globes Cristal; 2012", "prix; omar sy", "acteurs; joué avec; omar sy"};
+	
+	
+	public Evaluator() {
 		this.pertinents = new HashMap<String, Float>();
+		this.cache = new HashMap<Version, List<Entry<Document, Double>>>();
+	}
+	
+	public void getPertinents(String qrelDoc) throws IOException {
+		pertinents.clear();
 		BufferedReader reader = new BufferedReader(new FileReader(qrelDoc));
 		String line;
 		while ((line = reader.readLine()) != null) {
@@ -38,7 +46,6 @@ public class Evaluator {
 			}
 		}
 		reader.close();
-		this.cache = new HashMap<Version, List<Entry<Document, Double>>>();
 	}
 
 	private static String degres(float value) {
@@ -51,34 +58,61 @@ public class Evaluator {
 		} else return "++";
 	}
 	
-	public void evaluate(int nbResultsStart, int nbResultsEnd, Version...versions) {
-		System.out.println("Requetes a evaluer: " + query);
+	public void evaluateAll() throws IOException {
+		
+		//for(Version v : Version.values()) {
+		Version v = Version.V9;	
+			float precision5 = 0, precision10 = 0, precision25 = 0;
+			int nbQueries = 0;
+			for(String query : queries) {
+				nbQueries++;
+				//System.out.println(query + " ; " + "QRELS/qrelQ" + nbQueries + ".txt");
+				getPertinents("QRELS/qrelQ" + nbQueries + ".txt");
+				precision5 += evaluate(query, 0, 5, v);
+				precision10 += evaluate(query, 5, 10, v);
+				precision25 += evaluate(query, 10, 25, v);
+			}
+			System.out.println("Version étudié : " + v.getDescription());
+			System.out.println("P5: " + precision5/nbQueries);
+			System.out.println("P10: " + precision10/nbQueries);
+			System.out.println("P25: " + precision25/nbQueries);
+		//}
+		System.out.println("");
+
+	}
+	
+	public void evaluateOne(String query, String qrelDoc, int nbResultsStart, int nbResultsEnd, Version...versions) throws IOException {
+		System.out.println("Requete a evaluer: " + query);
 		
 		for(Version v : versions) {
-			List<Entry<Document, Double>> results = this.cache.get(v);
-			if (results == null) {
-				Matcher matcher = v.matcher;
-				results = new ArrayList<Entry<Document, Double>>(matcher.match(query));
-				this.cache.put(v, results);
-			}
-			
-			
-			Entry<Integer, Double> entry = getNbPertinentInRaking(results, nbResultsStart, nbResultsEnd);
-			// Pour le score
-			double rank = entry.getValue();
-			// Pour la prÃ©cision
-			double nbPertinentRaking = entry.getKey();
-			// Pour le rappel global
-			//double nbPertinentTotal = getNbPertinentInRaking(results, 0, results.size());
-	
-			double precision = nbPertinentRaking / (nbResultsEnd-nbResultsStart);
-			double rappelRaking = nbPertinentRaking / this.pertinents.size();
-			//double rappelGlobal = nbPertinentTotal / this.pertinents.size();
-			
-			System.out.println(v + " -> S@" + nbResultsEnd + ": " + decimal.format(rank) + ", P@" + nbResultsEnd + ": " + decimal.format(precision) + ", R@" + nbResultsEnd + ": " + decimal.format(rappelRaking)); // +", Global R:" + rappelGlobal);
+			getPertinents(qrelDoc);
+			evaluate(query, nbResultsStart, nbResultsEnd, v);
 		}
 		System.out.println("");
 
+	}
+	
+	public float evaluate(String query, int nbResultsStart, int nbResultsEnd, Version v) {
+		Matcher matcher = v.matcher;
+		List<Entry<Document, Double>> results = new ArrayList<Entry<Document, Double>>(matcher.match(query));
+
+		Entry<Integer, Double> entry = getNbPertinentInRaking(results, nbResultsStart, nbResultsEnd);
+		// Pour le score
+		double rank = entry.getValue();
+		// Pour la prÃ©cision
+		double nbPertinentRaking = entry.getKey();
+		// Pour le rappel global
+		//double nbPertinentTotal = getNbPertinentInRaking(results, 0, results.size());
+
+		double precision = nbPertinentRaking / (nbResultsEnd-nbResultsStart);
+		double rappelRaking = nbPertinentRaking / this.pertinents.size();
+		//double rappelGlobal = nbPertinentTotal / this.pertinents.size();
+		
+		System.out.println(v + " -> S@" + nbResultsEnd + ": " + decimal.format(rank) + 
+				", P@" + nbResultsEnd + ": " + decimal.format(precision) +
+				", R@" + nbResultsEnd + ": " + decimal.format(rappelRaking)); // +", Global R:" + rappelGlobal);
+		
+		return (float) precision;
 	}
 
 	private Entry<Integer, Double> getNbPertinentInRaking(List<Entry<Document, Double>> results, int nbResultsStart, int nbResultsEnd) {

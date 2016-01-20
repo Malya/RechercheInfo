@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,7 +51,8 @@ public class SparqlClient {
      * run a SPARQL query (select) on the remote server
      * @param queryString 
      */
-    public Collection<Map<String, String>> select(String queryString) {
+    public Collection<String> select(String queryString) {
+    	List<String> res = new ArrayList<String>() ;
         Document document = httpGetXmlContent(queryString);
         List<Map<String, String>> results = new LinkedList<Map<String, String>>();
         NodeList resultNodes = document.getElementsByTagName("result");
@@ -77,8 +80,13 @@ public class SparqlClient {
                 }
             }
         }
-
-        return results;
+        for(Map<String, String> r : results) {
+        	for(Entry<String, String> entry : r.entrySet()) {
+        		res.addAll(Arrays.asList(entry.getValue().split("[\\s\\p{Punct}]+")));
+        	}
+        }
+        
+        return res;
     }
 
     /**

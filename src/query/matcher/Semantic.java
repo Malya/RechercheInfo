@@ -66,11 +66,11 @@ public class Semantic implements Matcher {
 	
 	@Override
 	public List<Entry<Document, Double>> match(String query) {
-		List<String> terms = new ArrayList<String>() ;
+		ArrayList<String> enrichedQuery = new ArrayList<String>();
 		if (serverIsUp) {
-			HashSet<Map<String, String>> enrichedQuery = new HashSet<Map<String, String>>();
 			String sparqlQuery;
 	        for(String term : query.split(";")) {
+	        	enrichedQuery.add(term);
 	        	sparqlQuery = createSynonymQuery(term.trim().toLowerCase()); //TODO: Add a cleaning function ? 
 	        	enrichedQuery.addAll(sparqlClient.select(sparqlQuery));
 	        	
@@ -82,14 +82,9 @@ public class Semantic implements Matcher {
 	        	}
 	        }
 	        
-	        for(Map<String, String> res : enrichedQuery) {
-            	for(Entry<String, String> entry : res.entrySet()) {
-            		System.out.println(entry.getKey() + " : " + entry.getValue());
-            		terms.addAll(Arrays.asList(entry.getValue().split("[\\s\\p{Punct}]+")));
-            	}
-            }
+
 		}
-		return this.match(terms);
+		return this.match(enrichedQuery);
 	}
 
 	@Override
