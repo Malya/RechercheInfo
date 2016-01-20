@@ -4,15 +4,18 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -46,7 +49,7 @@ public class SparqlClient {
      * run a SPARQL query (select) on the remote server
      * @param queryString 
      */
-    public Iterable<Map<String, String>> select(String queryString) {
+    public Collection<Map<String, String>> select(String queryString) {
         Document document = httpGetXmlContent(queryString);
         List<Map<String, String>> results = new LinkedList<Map<String, String>>();
         NodeList resultNodes = document.getElementsByTagName("result");

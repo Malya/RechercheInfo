@@ -37,17 +37,17 @@ public class SearchEngine {
 					indexator.export();
 				}
 			} else if (opt.equals("-e")) {
-				Evaluator evaluator = new Evaluator("personnes Intouchables", "QRELS/qrelQ1.txt");
+				Evaluator evaluator = new Evaluator("personnes ; Intouchables", "QRELS/qrelQ1.txt");
 				evaluator.evaluate(0, 5, Version.values());
 				evaluator.evaluate(5, 10, Version.values());
 				evaluator.evaluate(10, 25, Version.values());
 				
-				evaluator = new Evaluator("lieu naissance omar sy", "QRELS/qrelQ2.txt");
+				evaluator = new Evaluator("lieu naissance ; omar sy", "QRELS/qrelQ2.txt");
 				evaluator.evaluate(0, 5, Version.values());
 				evaluator.evaluate(5, 10, Version.values());
 				evaluator.evaluate(10, 25, Version.values());
 				
-				evaluator = new Evaluator("acteurs joue avec omar sy", "QRELS/qrelQ9.txt");
+				evaluator = new Evaluator("acteurs ; joue avec ; omar sy", "QRELS/qrelQ9.txt");
 				evaluator.evaluate(0, 5, Version.values());
 				evaluator.evaluate(5, 10, Version.values());
 				evaluator.evaluate(10, 25, Version.values());
