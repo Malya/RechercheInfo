@@ -61,7 +61,19 @@ public enum Version {
 		@Override
 		protected double match(Term term, Link link) {
 			return link.getTF() * term.getGDF();
-		}})
+		}}, 1)
+	),
+	V10("17.01.16", "Enriched Semantic", new Semantic(new Basic() {
+		@Override
+		protected double match(Term term, Link link) {
+			return link.getTF() * term.getGDF();
+		}}, 2)
+	),
+	V11("17.01.16", "Enriched Semantic", new Semantic(new Basic() {
+		@Override
+		protected double match(Term term, Link link) {
+			return link.getTF() * term.getGDF();
+		}}, 3)
 	);
 	
 	private Date date;

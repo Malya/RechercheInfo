@@ -60,43 +60,42 @@ public class Evaluator {
 	
 	public void evaluateAll() throws IOException {
 		
-		//for(Version v : Version.values()) {
-		Version v = Version.V9;	
+		for(Version v : Version.values()) {
 			float precision5 = 0, precision10 = 0, precision25 = 0;
 			int nbQueries = 0;
 			for(String query : queries) {
 				nbQueries++;
 				//System.out.println(query + " ; " + "QRELS/qrelQ" + nbQueries + ".txt");
 				getPertinents("QRELS/qrelQ" + nbQueries + ".txt");
-				precision5 += evaluate(query, 0, 5, v);
-				precision10 += evaluate(query, 5, 10, v);
-				precision25 += evaluate(query, 10, 25, v);
+				precision5 += evaluate(query, 5, v);
+				precision10 += evaluate(query, 10, v);
+				precision25 += evaluate(query, 25, v);
 			}
 			System.out.println("Version étudié : " + v.getDescription());
 			System.out.println("P5: " + precision5/nbQueries);
 			System.out.println("P10: " + precision10/nbQueries);
 			System.out.println("P25: " + precision25/nbQueries);
-		//}
-		System.out.println("");
-
-	}
-	
-	public void evaluateOne(String query, String qrelDoc, int nbResultsStart, int nbResultsEnd, Version...versions) throws IOException {
-		System.out.println("Requete a evaluer: " + query);
-		
-		for(Version v : versions) {
-			getPertinents(qrelDoc);
-			evaluate(query, nbResultsStart, nbResultsEnd, v);
 		}
 		System.out.println("");
 
 	}
 	
-	public float evaluate(String query, int nbResultsStart, int nbResultsEnd, Version v) {
+	public void evaluateOne(String query, String qrelDoc, int nbResultsEnd, Version...versions) throws IOException {
+		System.out.println("Requete a evaluer: " + query);
+		
+		for(Version v : versions) {
+			getPertinents(qrelDoc);
+			evaluate(query, nbResultsEnd, v);
+		}
+		System.out.println("");
+
+	}
+	
+	public float evaluate(String query, int nbResultsEnd, Version v) {
 		Matcher matcher = v.matcher;
 		List<Entry<Document, Double>> results = new ArrayList<Entry<Document, Double>>(matcher.match(query));
 
-		Entry<Integer, Double> entry = getNbPertinentInRaking(results, nbResultsStart, nbResultsEnd);
+		Entry<Integer, Double> entry = getNbPertinentInRaking(results, nbResultsEnd);
 		// Pour le score
 		double rank = entry.getValue();
 		// Pour la prÃ©cision
@@ -104,21 +103,21 @@ public class Evaluator {
 		// Pour le rappel global
 		//double nbPertinentTotal = getNbPertinentInRaking(results, 0, results.size());
 
-		double precision = nbPertinentRaking / (nbResultsEnd-nbResultsStart);
+		double precision = nbPertinentRaking / nbResultsEnd;
 		double rappelRaking = nbPertinentRaking / this.pertinents.size();
 		//double rappelGlobal = nbPertinentTotal / this.pertinents.size();
 		
-		System.out.println(v + " -> S@" + nbResultsEnd + ": " + decimal.format(rank) + 
-				", P@" + nbResultsEnd + ": " + decimal.format(precision) +
-				", R@" + nbResultsEnd + ": " + decimal.format(rappelRaking)); // +", Global R:" + rappelGlobal);
+		//System.out.println(v + " -> S@" + nbResultsEnd + ": " + decimal.format(rank) + 
+		//		", P@" + nbResultsEnd + ": " + decimal.format(precision) +
+		//		", R@" + nbResultsEnd + ": " + decimal.format(rappelRaking)); // +", Global R:" + rappelGlobal);
 		
 		return (float) precision;
 	}
 
-	private Entry<Integer, Double> getNbPertinentInRaking(List<Entry<Document, Double>> results, int nbResultsStart, int nbResultsEnd) {
+	private Entry<Integer, Double> getNbPertinentInRaking(List<Entry<Document, Double>> results, int nbResultsEnd) {
 		Iterator<Entry<Document, Double>> it = results.iterator();
 		Entry<Document,Double> entry;
-		int i = nbResultsStart;
+		int i = 0;
 		int nbPertinent = 0;
 		double rank = 0.0;
 		double perfect = 0.0;
