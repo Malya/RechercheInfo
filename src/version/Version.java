@@ -8,6 +8,7 @@ import query.Matcher;
 import query.matcher.Basic;
 import query.matcher.Jaccard;
 import query.matcher.Normalized;
+import query.matcher.Semantic;
 import database.reader.Document;
 import database.reader.Link;
 import database.reader.Term;
@@ -56,13 +57,25 @@ public enum Version {
 		protected double match(Term term, Document doc, Link link) {
 			return link.getTF() * term.getGDF();
 		}
-	})/*,
+	}),
 	V9("17.01.16", "Semantic", new Semantic(new Basic() {
 		@Override
 		protected double match(Term term, Document doc, Link link) {
 			return link.getTF() * term.getGDF();
-		}})
-	)*/;
+		}}, 1)
+	),
+	V10("17.01.16", "Enriched Semantic", new Semantic(new Basic() {
+		@Override
+		protected double match(Term term, Document doc, Link link) {
+			return link.getTF() * term.getGDF();
+		}}, 2)
+	),
+	V11("17.01.16", "Enriched Semantic", new Semantic(new Basic() {
+		@Override
+		protected double match(Term term, Document doc, Link link) {
+			return link.getTF() * term.getGDF();
+		}}, 3)
+	);
 	
 	private Date date;
 	private final String description;
