@@ -8,7 +8,6 @@ import query.Matcher;
 import query.matcher.Basic;
 import query.matcher.Jaccard;
 import query.matcher.Normalized;
-import query.matcher.Semantic;
 import database.reader.Document;
 import database.reader.Link;
 import database.reader.Term;
@@ -79,6 +78,10 @@ public enum Version {
 	
 	public String info() {
 		return this.toString() + "(" + new SimpleDateFormat("dd.MM.yy").format(this.date) + ")::" + this.description; 
+	}
+	
+	public String getDescription() {
+		return description;
 	}
 	
 }

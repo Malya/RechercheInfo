@@ -23,7 +23,7 @@ public abstract class Basic extends Core {
 				if (score == null) {
 					score = 0.0;
 				}
-				score += match(term, doc, link);
+				score += term.getWeight() * match(term, doc, link);
 				scores.put(doc, score);
 			}
 		}

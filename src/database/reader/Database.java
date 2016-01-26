@@ -3,7 +3,8 @@ package database.reader;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
 
 import database.exception.DBException;
 import database.support.DBHelper;
@@ -50,12 +51,12 @@ public class Database {
 		}.execute();
 	}
 
-	public List<Term> load(List<Token> tokens) throws DBException {
-		List<Term> load = new ArrayList<Term>(tokens.size());
+	public Collection<Term> load(final Map<Integer, Token> tokens) throws DBException {
+		Collection<Term> load = new ArrayList<Term>(tokens.size());
 		StringBuilder query = new StringBuilder(SELECT);
 		String or = "";
 		boolean pool = false;
-		for (Token token : tokens) {
+		for (Token token : tokens.values()) {
 			String root = token.getRoot();
 			if (!terms.contains(root)) {
 				pool = true;
@@ -71,11 +72,14 @@ public class Database {
 				protected void process(ResultSet rs) throws DBException,
 				SQLException {
 					while (rs.next()) {
-						String term = rs.getString(1);
+						String name = rs.getString(1);
 						String path = rs.getString(2);
 						int tag = rs.getInt(3);
 						int pos = rs.getInt(4);
-						terms.get(term).links(docs.get(path), Tag.from(tag), pos);
+						Term term = terms.get(name);
+						term.links(docs.get(path), Tag.from(tag), pos);
+						Token token = tokens.get(name.hashCode());
+						term.setWeight(token.getWeight());
 					}
 				}
 			}.execute();

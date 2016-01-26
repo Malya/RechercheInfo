@@ -43,12 +43,16 @@ public abstract class Core implements Matcher {
 	}
 	
 	public List<Entry<Document, Double>> match(List<String> query) {
+		return this.match(query, null);
+	}
+	
+	public List<Entry<Document, Double>> match(List<String> query, List<Double> weight) {
 		
 		Map<Document, Double> scores = new HashMap<Document, Double>();
 		
 		Collection<Term> terms = null;
 		try {
-			terms = database.load(this.tokenizer.tokenize(query));
+			terms = database.load(this.tokenizer.tokenize(query, weight));
 		} catch (DBException e) {
 			e.printStackTrace();
 			System.exit(0);

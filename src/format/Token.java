@@ -10,4 +10,6 @@ public interface Token {
 	
 	public int getPos();
 	
+	public Double getWeight();
+	
 }

@@ -82,12 +82,16 @@ public class Stem implements Token, CharSequence {
 	private Integer rv;
 	private Integer r1;
 	private Integer r2;
+	
+	
 	private String stem;
-	private String normal;
+	private String normal;	
 	private Tag tag;
 	private int pos;
+	private Double weight;
 	
 	protected Stem(String word) {
+		this.weight = 0.0;
 		this.normal = this.init(word);
 		if (this.end > 1) {
 			this.stem = this.stem();
@@ -590,6 +594,19 @@ public class Stem implements Token, CharSequence {
 	@Override
 	public int getPos() {
 		return this.pos;
+	}
+	
+	protected void setWeight(Double weight) {
+		this.weight = weight;
+	}
+	
+	protected void addWeight(Double weight) {
+		this.weight += weight;
+	}
+	
+	@Override
+	public Double getWeight() {
+		return this.weight;
 	}
 	
 }

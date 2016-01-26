@@ -3,6 +3,7 @@ package format.parser;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -37,7 +38,7 @@ public abstract class Parser implements Tokenizer {
 	protected abstract void setTag(Token token, Tag tag);
 	protected abstract void setPos(Token token, int pos);
 
-	private List<Token> getTextNodes(Elements elems, List<Token> tokens) {
+	private Collection<Token> getTextNodes(Elements elems, Collection<Token> tokens) {
 		
 		StringBuilder sb = new StringBuilder();
 		for (Element elem : elems) {
@@ -46,7 +47,7 @@ public abstract class Parser implements Tokenizer {
 				sb.append(" ").append(node.text());
 			}
 			
-			List<Token> line = this.tokenize(sb.toString());
+			Collection<Token> line = this.tokenize(sb.toString());
 			
 			for(Token token : line) {
 				this.setTag(token, Tag.from(elem.tagName()));

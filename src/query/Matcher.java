@@ -11,4 +11,5 @@ public interface Matcher {
 	
 	public List<Entry<Document, Double>> match(List<String> query);
 	
+	public List<Entry<Document, Double>> match(List<String> query, List<Double> weight);
 }

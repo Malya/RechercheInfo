@@ -23,12 +23,12 @@ public class SparqlClientExample {
             for(String term : query.split(";")) {
             	String sparqlQuery = createSynonymQuery(term);
             	System.out.println("Query: \n" + sparqlQuery);
-            	newQuery.addAll(sparqlClient.select(sparqlQuery));
+            	//newQuery.addAll(sparqlClient.select(sparqlQuery));
             	
 	        	for(String term2 : query.split(";")) {
 	        		if(!term.contentEquals(term2)) {
 	        			sparqlQuery = createInstanceQuery(term, term2);
-	        			newQuery.addAll(sparqlClient.select(sparqlQuery));
+	        			//newQuery.addAll(sparqlClient.select(sparqlQuery));
 	        		}
 	        	}
             }
@@ -68,17 +68,5 @@ public class SparqlClientExample {
     			"LIMIT 20";
 	}
 	
-    private static void nbPersonnesParPiece(SparqlClient sparqlClient) {
-        String query = "PREFIX : <http://www.lamaisondumeurtre.fr#>\n"
-                    + "SELECT ?piece (COUNT(?personne) AS ?nbPers) WHERE\n"
-                    + "{\n"
-                    + "    ?personne :personneDansPiece ?piece.\n"
-                    + "}\n"
-                    + "GROUP BY ?piece\n";
-            Iterable<Map<String, String>> results = sparqlClient.select(query);
-            System.out.println("nombre de personnes par pièce:");
-            for (Map<String, String> result : results) {
-                System.out.println(result.get("piece") + " : " + result.get("nbPers"));
-            }
-    }    
+
 }

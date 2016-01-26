@@ -21,6 +21,7 @@ public class Term implements Unique {
 	
 	private String word;
 	private Integer gtf;
+	private Double weight;
 	private Map<Document, Link> binds;
 	
 	protected Term(String word) {
@@ -56,6 +57,14 @@ public class Term implements Unique {
 	
 	public Map<Document, Link> getBinds() {
 		return this.binds;
+	}
+	
+	protected void setWeight(double weight) {
+		this.weight = weight;
+	}
+	
+	public double getWeight() {
+		return this.weight;
 	}
 
 	@Override

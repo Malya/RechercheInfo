@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-import version.Version;
-
 
 public class SearchEngine {
 
@@ -37,7 +35,7 @@ public class SearchEngine {
 					indexator.export();
 				}
 			} else if (opt.equals("-e")) {
-				Evaluator evaluator = new Evaluator("personnes ; Intouchables", "QRELS/qrelQ1.txt");
+				/*Evaluator evaluator = new Evaluator("personnes ; Intouchables", "QRELS/qrelQ1.txt");
 				evaluator.evaluate(0, 5, Version.values());
 				evaluator.evaluate(5, 10, Version.values());
 				evaluator.evaluate(10, 25, Version.values());
@@ -50,7 +48,12 @@ public class SearchEngine {
 				evaluator = new Evaluator("acteurs ; joue avec ; omar sy", "QRELS/qrelQ9.txt");
 				evaluator.evaluate(0, 5, Version.values());
 				evaluator.evaluate(5, 10, Version.values());
-				evaluator.evaluate(10, 25, Version.values());
+				evaluator.evaluate(10, 25, Version.values());*/
+				Evaluator evaluator = new Evaluator();
+				/*evaluator.evaluateOne("acteurs; jou� avec; omar sy", "QRELS/qrelQ9.txt", 0, 5, Version.V9);
+				evaluator.evaluateOne("acteurs; jou� avec; omar sy", "QRELS/qrelQ9.txt", 5, 10, Version.V9);
+				evaluator.evaluateOne("acteurs; jou� avec; omar sy", "QRELS/qrelQ9.txt", 10, 25, Version.V9);*/
+				evaluator.evaluateAll();
 			}
 		}
 	}
