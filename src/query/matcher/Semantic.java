@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -14,8 +13,8 @@ import java.util.Map.Entry;
 
 import query.Matcher;
 import sparqlclient.SparqlClient;
-import database.writer.Database;
 import database.reader.Document;
+import database.writer.Database;
 import format.Token;
 import format.Tokenizer;
 

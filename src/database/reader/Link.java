@@ -1,22 +1,39 @@
 package database.reader;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import format.Tag;
+
 
 public class Link {
 
-	private Document doc;
-	private Integer tf;
+	private List<Tag> tags;
+	private List<Integer> pos;
 	
-	protected Link(Document doc, int tf) {
-		this.doc = doc;
-		this.tf = tf;
+	protected Link() {
+		this.tags = new ArrayList<Tag>();
+		this.pos = new ArrayList<Integer>();
 	}
 	
-	public Document getDoc() {
-		return this.doc;
+	protected void addTag(Tag tag) {
+		this.tags.add(tag);
+	}
+	
+	public List<Tag> getTags() {
+		return this.tags;
+	}
+	
+	protected void addPos(int pos) {
+		this.pos.add(pos);
+	}
+	
+	public List<Integer> getPos() {
+		return this.pos;
 	}
 	
 	public int getTF() {
-		return this.tf;
+		return this.tags.size();
 	}
 	
 }

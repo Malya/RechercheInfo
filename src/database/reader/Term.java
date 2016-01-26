@@ -1,9 +1,10 @@
 package database.reader;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import database.item.Unique;
+import format.Tag;
 
 public class Term implements Unique {
 	
@@ -20,11 +21,11 @@ public class Term implements Unique {
 	
 	private String word;
 	private Integer gtf;
-	private Collection<Link> binds;
+	private Map<Document, Link> binds;
 	
 	protected Term(String word) {
 		this.word = word;
-		this.binds = new ArrayList<Link>();
+		this.binds = new HashMap<Document, Link>();
 	}
 	
 	public String getWord() {
@@ -43,11 +44,17 @@ public class Term implements Unique {
 		return Math.log10((double) terms/this.gtf);
 	}
 	
-	protected void links(Document doc, int tf) {
-		this.binds.add(new Link(doc, tf));
+	protected void links(Document doc, Tag tag, int pos) {
+		Link link = this.binds.get(doc);
+		if (link == null) {
+			link = new Link();
+			this.binds.put(doc, link);
+		}
+		link.addTag(tag);
+		link.addPos(pos);
 	}
 	
-	public Collection<Link> getBinds() {
+	public Map<Document, Link> getBinds() {
 		return this.binds;
 	}
 

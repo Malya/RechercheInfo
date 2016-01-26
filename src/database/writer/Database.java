@@ -46,8 +46,8 @@ public class Database {
 		return tk;
 	}
 	
-	public void links(Token value, String doc, int tf) {
-		this.links.links(value.getRoot(), doc, tf);
+	public void links(Token value, String doc) {
+		this.links.links(value.getRoot(), doc, value.getTag(), value.getPos());
 	}
 
 	public void flush() {

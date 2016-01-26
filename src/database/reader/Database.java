@@ -9,6 +9,7 @@ import database.exception.DBException;
 import database.support.DBHelper;
 import database.support.Query;
 import database.support.sqlite.SQLite;
+import format.Tag;
 import format.Token;
 
 public class Database {
@@ -18,7 +19,7 @@ public class Database {
 
 	private static final String STATS = "SELECT Document, Term FROM STATS ORDER BY Date DESC LIMIT 1;";
 	
-	private static final String SELECT = "SELECT T.Term, D.Path, L.TF FROM LINKS AS L JOIN TERMS AS T JOIN DOCUMENTS AS D ON L.TermID = T.Id AND L.DocID = D.Id WHERE " ;
+	private static final String SELECT = "SELECT T.Term, D.Path, L.Tag, L.Pos FROM LINKS AS L JOIN TERMS AS T JOIN DOCUMENTS AS D ON L.TermID = T.Id AND L.DocID = D.Id WHERE " ;
 	private static final String END = ";";
 	
 	
@@ -72,8 +73,9 @@ public class Database {
 					while (rs.next()) {
 						String term = rs.getString(1);
 						String path = rs.getString(2);
-						int tf = rs.getInt(3);
-						terms.get(term).links(docs.get(path), tf);
+						int tag = rs.getInt(3);
+						int pos = rs.getInt(4);
+						terms.get(term).links(docs.get(path), Tag.from(tag), pos);
 					}
 				}
 			}.execute();

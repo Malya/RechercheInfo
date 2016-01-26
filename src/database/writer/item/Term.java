@@ -28,8 +28,12 @@ public class Term implements Unique {
 		return this.gtf;
 	}
 	
-	protected void links(int tf) {
-		this.gtf += tf;
+	protected void links() {
+		this.gtf += 1;
+	}
+	
+	protected void links(int gtf) {
+		this.gtf += gtf;
 	}
 	
 	protected void unlinks(int tf) {

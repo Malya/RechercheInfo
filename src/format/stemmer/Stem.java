@@ -3,6 +3,7 @@ package format.stemmer;
 import java.text.Normalizer;
 import java.util.Map.Entry;
 
+import format.Tag;
 import format.Token;
 import format.automaton.Automaton;
 import format.automaton.Backward;
@@ -83,7 +84,8 @@ public class Stem implements Token, CharSequence {
 	private Integer r2;
 	private String stem;
 	private String normal;
-	private String tag;
+	private Tag tag;
+	private int pos;
 	
 	protected Stem(String word) {
 		this.normal = this.init(word);
@@ -572,14 +574,22 @@ public class Stem implements Token, CharSequence {
 		return this.stem.hashCode();
 	}
 
-	@Override
-	public void setTag(String tag) {
+	protected void setTag(Tag tag) {
 		this.tag = tag;		
 	}
 
 	@Override
-	public String getTag() {
+	public Tag getTag() {
 		return tag;
+	}
+	
+	protected void setPos(int pos) {
+		this.pos = pos;
+	}
+	
+	@Override
+	public int getPos() {
+		return this.pos;
 	}
 	
 }

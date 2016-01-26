@@ -6,8 +6,8 @@ public interface Token {
 	
 	public String toString();
 	
-	public void setTag(String tag);
+	public Tag getTag();
 	
-	public String getTag();
+	public int getPos();
 	
 }

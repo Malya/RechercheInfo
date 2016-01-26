@@ -25,8 +25,8 @@ public class Document implements Unique {
 		return this.weight;
 	}
 	
-	protected void link(int weight) {
-		this.weight += weight * weight;
+	protected void link() {
+		this.weight += 1;
 	}
 	
 	@Override

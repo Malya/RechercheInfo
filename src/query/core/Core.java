@@ -35,7 +35,7 @@ public abstract class Core implements Matcher {
 	private Tokenizer tokenizer;
 	
 	public Core() {
-		this.tokenizer = new Stemmer();;
+		this.tokenizer = new Stemmer();
 	}
 	
 	public List<Entry<Document, Double>> match(String query) {

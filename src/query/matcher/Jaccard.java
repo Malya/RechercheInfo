@@ -21,7 +21,7 @@ public class Jaccard extends Basic {
 	}
 
 	@Override
-	protected double match(Term term, Link link) {
+	protected double match(Term term, Document doc, Link link) {
 		return link.getTF();
 	}
 

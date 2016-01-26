@@ -3,12 +3,13 @@ package format.stemmer;
 import java.util.ArrayList;
 import java.util.List;
 
+import format.Tag;
 import format.Token;
-import format.Tokenizer;
+import format.parser.Parser;
 
 
 
-public class Stemmer implements Tokenizer {
+public class Stemmer extends Parser {
 	
 	public List<Token> tokenize(String sentence) {
 		List<Token> tokens = new ArrayList<Token>();
@@ -34,6 +35,16 @@ public class Stemmer implements Tokenizer {
 			}
 		}
 		return tokens;
+	}
+
+	@Override
+	protected void setTag(Token token, Tag tag) {
+		((Stem) token).setTag(tag);
+	}
+	
+	@Override
+	protected void setPos(Token token, int pos) {
+		((Stem) token).setPos(pos);
 	}
 	
 }
