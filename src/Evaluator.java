@@ -23,9 +23,9 @@ public class Evaluator {
 	
 	private Map<String, Float> pertinents;
 	
-	private String queries[] = {"personnes;Intouchables", "lieu naissance; omar sy", "personnes; rï¿½compensï¿½es; Intouchables",
-			"palmarï¿½s; Globes de Cristal; 2012", "membre;jury;Globes de Cristal;2012", "prix; omar sy; Globes de Cristal; 2012",
-			"lieu; Globes Cristal; 2012", "prix; omar sy", "acteurs; jouï¿½ avec; omar sy"};
+	private String queries[] = {"personnes;Intouchables", "lieu naissance; omar sy", "personnes; récompensées; Intouchables",
+			"palmarès; Globes de Cristal; 2012", "membre;jury;Globes de Cristal;2012", "prix; omar sy; Globes de Cristal; 2012",
+			"lieu; Globes Cristal; 2012", "prix; omar sy", "acteurs; joué avec; omar sy"};
 	
 	
 	public Evaluator() {

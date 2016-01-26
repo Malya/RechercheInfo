@@ -2,14 +2,18 @@ package query.matcher;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import database.reader.Document;
+import format.Token;
+import format.Tokenizer;
+import format.stemmer.Stemmer;
 import query.Matcher;
 import sparqlclient.SparqlClient;
-import database.reader.Document;
 
 
 public class Semantic implements Matcher {
@@ -22,9 +26,12 @@ public class Semantic implements Matcher {
 	
 	private Map<String, Entry<List<String>, List<Double>>> cache;
 	
+	private Tokenizer tokenizer;
+	
 	final int version;
 	
 	public Semantic(Matcher matcher, final int version) {
+		this.tokenizer = new Stemmer();
 		this.matcher = matcher;
 		this.version = version;
 		this.sparqlClient = new SparqlClient("localhost:3030/space");
@@ -42,9 +49,10 @@ public class Semantic implements Matcher {
 		
 		ArrayList<String> enrichedQuery = new ArrayList<String>();
 		List<String> finalQuery = new ArrayList<String>();
+		List<String> terms = Arrays.asList(query.split(";"));
 		if (serverIsUp) {
 			String sparqlQuery;
-	        for(String term : query.split(";")) {
+	        for(String term : terms) {
 	        	enrichedQuery.add(term);
 	        	if(version == 1 || version == 3) {
 		        	sparqlQuery = createSynonymQuery(term.trim().toLowerCase()); //TODO: Add a cleaning function ? 
@@ -62,19 +70,39 @@ public class Semantic implements Matcher {
 	        }
 		}
 		
-		cache.put(query, new SimpleEntry<List<String>, List<Double>>(finalQuery, null /* TODO pass the list of weight*/));
+		ArrayList<Double> weights = new ArrayList<>();
+		for(String term : enrichedQuery) {
+			if(terms.contains(term)) {
+				for(Token t : tokenizer.tokenize(term)) {
+					if(!finalQuery.contains(t.getRoot())) {
+						finalQuery.add(t.getRoot());
+						weights.add(3.);
+					}
+				}
+			} else {
+				for(Token t : tokenizer.tokenize(term)) {
+					if(!finalQuery.contains(t.getRoot())) {
+						finalQuery.add(t.getRoot());
+						weights.add(1.);
+					}
+				}
+			}
+		}
+		cache.put(query, new SimpleEntry<List<String>, List<Double>>(finalQuery, null));
 		
-		return this.match(enrichedQuery, null /* TODO pass the list of weight */);
+		return this.match(finalQuery, weights);
 	}
 
 	@Override
 	public List<Entry<Document, Double>> match(List<String> query) {
+		System.out.println("List to match: "+ query);
 		return this.matcher.match(query);
 	}
 	
 	@Override
 	public List<Entry<Document, Double>> match(List<String> query,
 			List<Double> weight) {
+		System.out.println("List to match: "+ query);
 		return this.matcher.match(query, weight);
 	}
 	
