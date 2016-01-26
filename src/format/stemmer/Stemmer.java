@@ -1,7 +1,7 @@
 package format.stemmer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,13 +14,22 @@ import format.parser.Parser;
 
 public class Stemmer extends Parser {
 	
-	public Collection<Token> tokenize(String sentence) {
+	public List<Token> tokenize(String sentence) {
 		return this.tokenize(Arrays.asList(sentence.split("[\\s\\p{Punct}\\'’]+")));
-	}
+ 	}
 	
-	public Collection<Token> tokenize(List<String> words) {
-		return this.tokenize(words, null).values();
-	}
+	public List<Token> tokenize(List<String> words) {
+ 		List<Token> tokens = new ArrayList<Token>(words.size());
+ 		for (String word : words) {
+ 			if (word.length() > 1) {
+ 				Stem stem = new Stem(word);
+ 				if (stem.length() > 1) {
+ 					tokens.add(stem);
+ 				}
+ 			}
+ 		}
+ 		return tokens;
+ 	}
 	
 	@SuppressWarnings("unchecked")
 	public Map<Integer, Token> tokenize(List<String> words, List<Double> weights) {
