@@ -70,7 +70,7 @@ public enum Version {
 			return link.getTF() * term.getGDF();
 		}}, 2)
 	),
-	V11("17.01.16", "Enriched Semantic", new Semantic(new Basic() {
+	V11("17.01.16", "Very Enriched Semantic", new Semantic(new Basic() {
 		@Override
 		protected double match(Term term, Document doc, Link link) {
 			return link.getTF() * term.getGDF();

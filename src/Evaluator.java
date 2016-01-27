@@ -80,10 +80,11 @@ public class Evaluator {
 	
 	public void evaluateOne(String query, String qrelDoc, int nbResultsEnd, Version...versions) throws IOException {
 		System.out.println("Requete a evaluer: " + query);
-		
+		float precision;
 		for(Version v : versions) {
 			getPertinents(qrelDoc);
-			evaluate(query, nbResultsEnd, v);
+			precision = evaluate(query, nbResultsEnd, v);
+			System.out.println("P" + nbResultsEnd + ": " + decimal.format(precision));
 		}
 		System.out.println("");
 

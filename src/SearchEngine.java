@@ -1,8 +1,9 @@
-import index.Indexator;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+
+import index.Indexator;
+import version.Version;
 
 
 public class SearchEngine {
@@ -14,6 +15,7 @@ public class SearchEngine {
 		boolean log = false;
 		boolean print = false;
 		long time = 0;
+		int index = 0;
 		for (String opt : args) {
 			if (opt.equals("-l")) {
 				log = true;
@@ -34,27 +36,20 @@ public class SearchEngine {
 				if (print) {
 					indexator.export();
 				}
-			} else if (opt.equals("-e")) {
-				/*Evaluator evaluator = new Evaluator("personnes ; Intouchables", "QRELS/qrelQ1.txt");
-				evaluator.evaluate(0, 5, Version.values());
-				evaluator.evaluate(5, 10, Version.values());
-				evaluator.evaluate(10, 25, Version.values());
-				
-				evaluator = new Evaluator("lieu naissance ; omar sy", "QRELS/qrelQ2.txt");
-				evaluator.evaluate(0, 5, Version.values());
-				evaluator.evaluate(5, 10, Version.values());
-				evaluator.evaluate(10, 25, Version.values());
-				
-				evaluator = new Evaluator("acteurs ; joue avec ; omar sy", "QRELS/qrelQ9.txt");
-				evaluator.evaluate(0, 5, Version.values());
-				evaluator.evaluate(5, 10, Version.values());
-				evaluator.evaluate(10, 25, Version.values());*/
+			} else if (opt.equals("-eAll")) {
 				Evaluator evaluator = new Evaluator();
-				/*evaluator.evaluateOne("acteurs; jou� avec; omar sy", "QRELS/qrelQ9.txt", 0, 5, Version.V9);
-				evaluator.evaluateOne("acteurs; jou� avec; omar sy", "QRELS/qrelQ9.txt", 5, 10, Version.V9);
-				evaluator.evaluateOne("acteurs; jou� avec; omar sy", "QRELS/qrelQ9.txt", 10, 25, Version.V9);*/
 				evaluator.evaluateAll();
+			} else if (opt.equals("-e")) {
+				if(args.length < index + 3) {
+					System.out.println("Usage: -e REQUETE QREL_PATH");
+				} else {
+					Evaluator evaluator = new Evaluator();
+					evaluator.evaluateOne(args[index+1], args[index+2], 5, Version.V11);
+					evaluator.evaluateOne(args[index+1], args[index+2], 10, Version.V11);
+					evaluator.evaluateOne(args[index+1], args[index+2], 25, Version.V11);
+				}
 			}
+			index++;
 		}
 	}
 
