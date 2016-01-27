@@ -12,6 +12,7 @@ import query.matcher.Semantic;
 import database.reader.Document;
 import database.reader.Link;
 import database.reader.Term;
+import format.Tag;
 
 public enum Version {
 
@@ -58,19 +59,29 @@ public enum Version {
 			return link.getTF() * term.getGDF();
 		}
 	}),
-	V9("17.01.16", "Semantic", new Semantic(new Basic() {
+	V9("27.01.16", "TF-IDF with Tags", new Basic() {
+		@Override
+		protected double match(Term term, Document doc, Link link) {
+			double res = 0;
+			for (Tag tag : link.getTags()) 
+				res += tag.weight;
+			
+			return res * term.getIDF();
+		}
+	}),
+	V10("17.01.16", "Semantic", new Semantic(new Basic() {
 		@Override
 		protected double match(Term term, Document doc, Link link) {
 			return link.getTF() * term.getGDF();
 		}}, 1)
 	),
-	V10("17.01.16", "Enriched Semantic", new Semantic(new Basic() {
+	V11("17.01.16", "Enriched Semantic", new Semantic(new Basic() {
 		@Override
 		protected double match(Term term, Document doc, Link link) {
 			return link.getTF() * term.getGDF();
 		}}, 2)
 	),
-	V11("17.01.16", "Very Enriched Semantic", new Semantic(new Basic() {
+	V12("17.01.16", "Very Enriched Semantic", new Semantic(new Basic() {
 		@Override
 		protected double match(Term term, Document doc, Link link) {
 			return link.getTF() * term.getGDF();
